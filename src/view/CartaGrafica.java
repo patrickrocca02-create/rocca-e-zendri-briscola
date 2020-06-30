@@ -9,6 +9,6 @@ public class CartaGrafica extends ImageView {
 
     public CartaGrafica(Carta c){
         this.carta = c;
-        //setImage(new Image("../controller"));
+        setImage(new Image("../carte/" + c.getSeme() + " " + c.getNumero() + ".png"));
     }
 }
