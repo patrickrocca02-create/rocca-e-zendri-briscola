@@ -12,6 +12,7 @@ public class Server {
         switch (nGiocatori) {
             case 2:
                 partita = new Partita2();
+                clients = new ArrayList<Client>();
         }
     }
 
@@ -29,15 +30,17 @@ public class Server {
             } catch(Exception e) {}
         }
 
+        broadcastDisposizione();
+
         boolean finito = false;
         while(!finito){
+            System.out.println("In attesa di una carta...");
             Carta c = clients.get(partita.getTurno()).ascolta();
 
             partita.processaMossa(c);
+            System.out.println("Carta processata");
 
-            int i = 0;
-            for(Giocatore g : partita.getGiocatori())
-                clients.get(i++).inviaDisposizione(new Disposizione(g.getCarteInMano(),partita.getCarteInTavola(),partita.getBriscola()));
+            broadcastDisposizione();
 
             finito = true;
             for(Giocatore g : partita.getGiocatori())
@@ -54,5 +57,17 @@ public class Server {
         try{
             ss.close();
         }catch(Exception e){}
+    }
+
+    private void broadcastDisposizione(){
+        int i = 0;
+        for(Giocatore g : partita.getGiocatori()) {
+            boolean turno = false;
+
+            if (i == partita.getTurno())
+                turno = true;
+
+            clients.get(i++).inviaDisposizione(new Disposizione(g.getCarteInMano(), partita.getCarteInTavola(), partita.getBriscola(),turno));
+        }
     }
 }

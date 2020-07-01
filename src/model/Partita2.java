@@ -28,7 +28,7 @@ public class Partita2 extends Partita{
 
          giocatori.get(turno).rimuoviCarta(c);
 
-         if(carteInTavola.size() != 0){
+         if(carteInTavola.size() == 2){
              int winner = 0;
              Carta c1 = carteInTavola.get(0);
              Carta c2 = carteInTavola.get(1);

@@ -34,7 +34,7 @@ public class Client {
     //invia: 0 se ha vinto, 1 se ha perso, 2 se ha pareeggiato
     public void finePartita(int esito){
         try {
-            out.write(esito);
+            out.writeObject((Integer) esito);
         } catch (Exception e) {}
         try {
             s.close();
