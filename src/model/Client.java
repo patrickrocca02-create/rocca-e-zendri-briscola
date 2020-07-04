@@ -1,8 +1,6 @@
 package model;
 
-import java.io.ObjectInputFilter;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
 
 public class Client {
@@ -10,11 +8,14 @@ public class Client {
     private ObjectInputStream in;
     private ObjectOutputStream out;
 
+    private ObjectOutputStream file;
+
     public Client(Socket s){
         this.s = s;
         try{
             in = new ObjectInputStream(s.getInputStream());
             out = new ObjectOutputStream(s.getOutputStream());
+            file = new ObjectOutputStream(new FileOutputStream(new File("ogg.bin")));
         }
         catch(Exception e){}
     }
@@ -22,12 +23,16 @@ public class Client {
     public void inviaDisposizione(Disposizione d){
         try {
             out.writeObject(d);
-        } catch (Exception e) {}
+            out.flush();
+
+            file.writeObject(d);
+            file.flush();
+        } catch (Exception e) { e.printStackTrace(); }
     }
     public Carta ascolta(){
         try {
             return (Carta) in.readObject();
-        } catch (Exception e) {}
+        } catch (Exception e) { e.printStackTrace(); }
         return null;
     }
 
@@ -35,6 +40,7 @@ public class Client {
     public void finePartita(int esito){
         try {
             out.writeObject((Integer) esito);
+            out.flush();
         } catch (Exception e) {}
         try {
             s.close();

@@ -12,6 +12,7 @@ public class Server {
         switch (nGiocatori) {
             case 2:
                 partita = new Partita2();
+                partita.setServer(this);
                 clients = new ArrayList<Client>();
         }
     }
@@ -19,7 +20,7 @@ public class Server {
     public void start(){
         ServerSocket ss = null;
         try {
-            ss = new ServerSocket(2201);
+            ss = new ServerSocket(2200);
         } catch(Exception e) {}
 
         for (int i = 0; i < partita.getNGiocatori(); i++) {
@@ -30,22 +31,21 @@ public class Server {
             } catch(Exception e) {}
         }
 
-        broadcastDisposizione();
+        broadcastDisposizione(false);
 
         boolean finito = false;
         while(!finito){
-            System.out.println("In attesa di una carta...");
             Carta c = clients.get(partita.getTurno()).ascolta();
 
             partita.processaMossa(c);
-            System.out.println("Carta processata");
 
-            broadcastDisposizione();
+            broadcastDisposizione(false);
 
             finito = true;
             for(Giocatore g : partita.getGiocatori())
-                if(g.getCarteInMano().size() != 0)
-                    finito = false;
+                for(Carta carta : g.getCarteInMano())
+                    if(carta != null)
+                        finito = false;
         }
 
         int i = 0;
@@ -59,15 +59,37 @@ public class Server {
         }catch(Exception e){}
     }
 
-    private void broadcastDisposizione(){
+    protected void broadcastDisposizione(boolean fineMano){
         int i = 0;
         for(Giocatore g : partita.getGiocatori()) {
             boolean turno = false;
 
-            if (i == partita.getTurno())
+            if (i == partita.getTurno() && !fineMano)
                 turno = true;
 
-            clients.get(i++).inviaDisposizione(new Disposizione(g.getCarteInMano(), partita.getCarteInTavola(), partita.getBriscola(),turno));
+            ArrayList<Carta> carteInMano = new ArrayList<>(g.getCarteInMano());
+            ArrayList<Carta> carteInTavola = new ArrayList<>();
+
+            if(i == 0) {
+                carteInTavola.add(partita.getCarteInTavola().get(0));
+                carteInTavola.add(partita.getCarteInTavola().get(1));
+            }
+            else{
+                carteInTavola.add(partita.getCarteInTavola().get(1));
+                carteInTavola.add(partita.getCarteInTavola().get(0));
+            }
+
+            Carta briscola = null;
+            if(!partita.isMazzoFinito())
+                briscola = partita.getBriscola();
+
+            int avversario = 0;
+            if(i == 0)
+                avversario = 1;
+            boolean schieneAvversarie[] = partita.getGiocatori().get(avversario).getListaSchiene();
+
+            Disposizione d = new Disposizione(carteInMano, carteInTavola, briscola, turno,schieneAvversarie);
+            clients.get(i++).inviaDisposizione(d);
         }
     }
 }

@@ -14,6 +14,7 @@ public class Client extends Thread{
     private View view;
     private ObjectOutputStream out;
     private ObjectInputStream in;
+    private boolean turno;
 
     public Client(InetAddress ipServer, int porta, View view){
         this.view = view;
@@ -21,25 +22,20 @@ public class Client extends Thread{
         Socket client = null;
         try{
             client = new Socket(ipServer,porta);
-        }catch (Exception e){}
+        }catch (Exception e){ e.printStackTrace(); }
         try {
             out = new ObjectOutputStream(client.getOutputStream());
-        }catch (Exception e){}
+        }catch (Exception e){ e.printStackTrace(); }
         try {
             in = new ObjectInputStream(client.getInputStream());
-        }catch (Exception e){}
+        }catch (Exception e){ e.printStackTrace(); }
     }
 
     public void inviaCarta(int indice){
         try{
             out.writeObject(view.getCarta(indice).getCarta());
-        }catch (Exception e) {}
-    }
-
-    public void inviaCarta(Carta c){
-        try {
-            out.writeObject(c);
-        }catch (Exception e) {}
+            out.flush();
+        }catch (Exception e) { e.printStackTrace(); }
     }
 
     private void finePartita(int esito) {
@@ -51,25 +47,37 @@ public class Client extends Thread{
             System.out.println("PAREGGIO");
     }
 
+    public boolean isTurno(){
+        return this.turno;
+    }
+
     @Override
     public void run() {
 
         boolean fine = false;
-        Object inObj = null;
+
 
         while (!fine) {
+            Object inObj = null;
             try {
-                System.out.println("In attesa di una nuova dispozione...");
                 inObj = in.readObject();
-            } catch (Exception e) {
-            }
+            } catch (Exception e) { e.printStackTrace(); }
 
             if (inObj instanceof Disposizione) {
-                view.aggiornaView((Disposizione) inObj);
+                Disposizione d = (Disposizione) inObj;
+                this.turno = d.isTurno();
+                view.aggiornaView(d);
+                try {
+                    Thread.sleep(1000);
+                }catch (Exception e){}
             } else {
                 finePartita((int) (Integer) inObj);
                 fine = true;
             }
         }
+    }
+
+    public void setTurno(boolean turno) {
+        this.turno = turno;
     }
 }

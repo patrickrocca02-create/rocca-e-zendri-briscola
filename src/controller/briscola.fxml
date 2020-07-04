@@ -10,7 +10,7 @@
       <AnchorPane prefHeight="360.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
             <ImageView fx:id="cartaInTavolaClient" fitHeight="180.0" fitWidth="115.0" layoutX="46.0" layoutY="196.0" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fitHeight="180.0" fitWidth="115.0" layoutX="324.0" layoutY="106.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="mazzo" fitHeight="180.0" fitWidth="115.0" layoutX="324.0" layoutY="106.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../carte/schiena.png" />
                </image>
@@ -24,29 +24,17 @@
       <AnchorPane prefHeight="150.0" prefWidth="600.0" BorderPane.alignment="CENTER">
          <children>
             <ImageView fx:id="carta1" fitHeight="180.0" fitWidth="115.0" layoutX="76.0" layoutY="18.0" onMouseClicked="#onClickCarta1" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="carta3" fitHeight="180.0" fitWidth="115.0" layoutX="235.0" layoutY="6.0" onMouseClicked="#onClickCarta2" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="carta2" fitHeight="180.0" fitWidth="115.0" layoutX="373.0" layoutY="18.0" onMouseClicked="#onClickCarta3" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="carta2" fitHeight="180.0" fitWidth="115.0" layoutX="235.0" layoutY="6.0" onMouseClicked="#onClickCarta2" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="carta3" fitHeight="180.0" fitWidth="115.0" layoutX="373.0" layoutY="18.0" onMouseClicked="#onClickCarta3" pickOnBounds="true" preserveRatio="true" />
          </children>
       </AnchorPane>
    </bottom>
    <top>
       <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <ImageView fitHeight="180.0" fitWidth="115.0" layoutX="397.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../carte/schiena.png" />
-               </image>
-            </ImageView>
-            <ImageView fitHeight="180.0" fitWidth="115.0" layoutX="265.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../carte/schiena.png" />
-               </image>
-            </ImageView>
-            <ImageView fitHeight="180.0" fitWidth="115.0" layoutX="92.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../carte/schiena.png" />
-               </image>
-            </ImageView>
+            <ImageView fx:id="schiena1" fitHeight="180.0" fitWidth="115.0" layoutX="397.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="schiena2" fitHeight="180.0" fitWidth="115.0" layoutX="265.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="schiena3" fitHeight="180.0" fitWidth="115.0" layoutX="92.0" pickOnBounds="true" preserveRatio="true" />
          </children>
       </AnchorPane>
    </top>

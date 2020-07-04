@@ -32,10 +32,12 @@ public class Carta implements Serializable {
         return numero;
     }
 
-    public boolean equals(Carta c){
+    @Override
+    public boolean equals(Object obj) {
+        if(obj == null) return false;
+        Carta c = (Carta) obj;
         return c.getSeme() == this.seme && c.getNumero() == this.numero;
     }
-
 
     public String toString(){
         return "Seme: " +  this.seme + ", Numero: " + this.numero;

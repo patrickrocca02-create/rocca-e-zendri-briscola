@@ -10,8 +10,11 @@ public abstract class Partita {
     protected Carta briscola;
     protected ArrayList<Carta> carteInTavola;
     protected int turno;
+    protected Server server;
+    protected boolean mazzoFinito;
 
     public Partita(){
+        mazzoFinito = false;
         inizializzaMazzo();
         briscola = prossimaCarta();
     }
@@ -30,6 +33,10 @@ public abstract class Partita {
         giocatori.get(idGiocatore).aggiungiCarta(prossimaCarta());
 
     }
+    public void setServer(Server server){
+        this.server = server;
+    }
+
     protected Carta prossimaCarta(){
         Carta c = mazzo.get(0);
         mazzo.remove(0);
@@ -50,6 +57,9 @@ public abstract class Partita {
     }
     public ArrayList<Carta> getCarteInTavola() {
         return carteInTavola;
+    }
+    public boolean isMazzoFinito() {
+        return mazzoFinito;
     }
 
     public abstract void processaMossa(Carta c);
