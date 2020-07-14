@@ -43,6 +43,58 @@ public abstract class Partita {
         return c;
     }
 
+    protected int vincitore(Carta c1, int idG1, Carta c2, int idG2){
+        int winner;
+        int g1 = idG1;
+        int g2 = idG2;
+
+        if(c1.getSeme() == c2.getSeme()){
+
+            if(c1.getNumero() > c2.getNumero())
+                winner = g1;
+            else
+                winner = g2;
+
+            switch(c1.getNumero()) {
+                case 1: winner = g1; break;
+                case 3:
+                    if(c2.getNumero() != 1)
+                        winner = g1;
+                    break;
+            }
+
+            switch(c2.getNumero()) {
+                case 1: winner = g2; break;
+                case 3:
+                    if(c1.getNumero() != 1)
+                        winner = g2;
+                    break;
+            }
+
+        } else if (c1.getSeme() == briscola.getSeme())
+            winner = g1;
+        else if (c2.getSeme() == briscola.getSeme())
+            winner = g2;
+        else
+            winner = g1;
+
+        return winner;
+    }
+    protected void clearCarteInTavola(){
+        for (int i = 0; i < carteInTavola.size(); i++) {
+            carteInTavola.set(i,null);
+        }
+    }
+    protected void pescaCarte(){
+        for(Giocatore g : giocatori) {
+            if(mazzo.size() > 0) {
+                g.aggiungiCarta(prossimaCarta());
+            }else if(!mazzoFinito) {
+                g.aggiungiCarta(briscola);
+                mazzoFinito = true;
+            }
+        }
+    }
     public int getNGiocatori(){
         return giocatori.size();
     }
@@ -62,6 +114,8 @@ public abstract class Partita {
         return mazzoFinito;
     }
 
+    public abstract int[] getIndiciGiocatoriTurno();
+    public abstract int[] getIndiciGiocatoriSuccessivi(int giocatore);
     public abstract void processaMossa(Carta c);
     public abstract int[] getVincitori();
 }

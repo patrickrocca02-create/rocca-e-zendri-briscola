@@ -1,6 +1,5 @@
 package model;
 
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 
@@ -12,15 +11,23 @@ public class Server {
         switch (nGiocatori) {
             case 2:
                 partita = new Partita2();
-                partita.setServer(this);
-                clients = new ArrayList<Client>();
+                break;
+            case 3:
+                partita = new Partita3();
+                break;
+            case 4:
+                partita = new Partita4();
+                break;
         }
+
+        partita.setServer(this);
+        clients = new ArrayList<Client>();
     }
 
     public void start(){
         ServerSocket ss = null;
         try {
-            ss = new ServerSocket(2200);
+            ss = new ServerSocket(2201);
         } catch(Exception e) {}
 
         for (int i = 0; i < partita.getNGiocatori(); i++) {
@@ -70,25 +77,21 @@ public class Server {
             ArrayList<Carta> carteInMano = new ArrayList<>(g.getCarteInMano());
             ArrayList<Carta> carteInTavola = new ArrayList<>();
 
-            if(i == 0) {
-                carteInTavola.add(partita.getCarteInTavola().get(0));
-                carteInTavola.add(partita.getCarteInTavola().get(1));
-            }
-            else{
-                carteInTavola.add(partita.getCarteInTavola().get(1));
-                carteInTavola.add(partita.getCarteInTavola().get(0));
+            int[] indiciGiocatoriSuccessivi = partita.getIndiciGiocatoriSuccessivi(i);
+            for(int idGiocatore : indiciGiocatoriSuccessivi){
+                carteInTavola.add(partita.getCarteInTavola().get(idGiocatore));
             }
 
             Carta briscola = null;
             if(!partita.isMazzoFinito())
                 briscola = partita.getBriscola();
 
-            int avversario = 0;
-            if(i == 0)
-                avversario = 1;
-            boolean schieneAvversarie[] = partita.getGiocatori().get(avversario).getListaSchiene();
+            boolean schiene[][] = new boolean[partita.getGiocatori().size()-1][];
+            for(int j = 0; j < schiene.length; j++){
+                schiene[j] = partita.getGiocatori().get(indiciGiocatoriSuccessivi[j+1]).getListaSchiene();
+            }
 
-            Disposizione d = new Disposizione(carteInMano, carteInTavola, briscola, turno,schieneAvversarie);
+            Disposizione d = new Disposizione(carteInMano, carteInTavola, briscola, turno,schiene);
             clients.get(i++).inviaDisposizione(d);
         }
     }

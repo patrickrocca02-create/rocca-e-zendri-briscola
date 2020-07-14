@@ -8,14 +8,11 @@ public class Client {
     private ObjectInputStream in;
     private ObjectOutputStream out;
 
-    private ObjectOutputStream file;
-
     public Client(Socket s){
         this.s = s;
         try{
             in = new ObjectInputStream(s.getInputStream());
             out = new ObjectOutputStream(s.getOutputStream());
-            file = new ObjectOutputStream(new FileOutputStream(new File("ogg.bin")));
         }
         catch(Exception e){}
     }
@@ -24,9 +21,6 @@ public class Client {
         try {
             out.writeObject(d);
             out.flush();
-
-            file.writeObject(d);
-            file.flush();
         } catch (Exception e) { e.printStackTrace(); }
     }
     public Carta ascolta(){

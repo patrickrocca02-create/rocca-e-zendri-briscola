@@ -9,24 +9,28 @@ import java.util.ArrayList;
 public class View {
     ArrayList<CartaGrafica> carteInMano;
     ArrayList<CartaGrafica> carteInTavola;
-    ArrayList<CartaGrafica> schieneAvversarie;
+    CartaGrafica[][] schiene;
     CartaGrafica briscola;
     CartaGrafica mazzo;
 
-    public View(ImageView[] carteInTavola, ImageView briscola, ImageView[] carteInMano, ImageView[] schieneAvversarie, ImageView mazzo){
+    public View(ImageView[] carteInTavola, ImageView briscola, ImageView[] carteInMano, ImageView[][] schiene, ImageView mazzo){
         this.carteInMano = new ArrayList<CartaGrafica>();
         this.carteInMano.add(new CartaGrafica(carteInMano[0]));
         this.carteInMano.add(new CartaGrafica(carteInMano[1]));
         this.carteInMano.add(new CartaGrafica(carteInMano[2]));
 
         this.carteInTavola = new ArrayList<CartaGrafica>();
-        this.carteInTavola.add(new CartaGrafica(carteInTavola[0]));
-        this.carteInTavola.add(new CartaGrafica(carteInTavola[1]));
+        for (ImageView c : carteInTavola) {
+            this.carteInTavola.add(new CartaGrafica(c));
+        }
 
-        this.schieneAvversarie = new ArrayList<CartaGrafica>();
-        this.schieneAvversarie.add(new CartaGrafica(schieneAvversarie[0]));
-        this.schieneAvversarie.add(new CartaGrafica(schieneAvversarie[1]));
-        this.schieneAvversarie.add(new CartaGrafica(schieneAvversarie[2]));
+        this.schiene = new CartaGrafica[schiene.length][];
+        for (int i = 0; i < schiene.length; i++) {
+            this.schiene[i] = new CartaGrafica[3];
+            for (int j = 0; j < this.schiene[i].length; j++) {
+                this.schiene[i][j] = new CartaGrafica(schiene[i][j]);
+            }
+        }
 
         this.briscola = new CartaGrafica(briscola);
 
@@ -46,9 +50,10 @@ public class View {
         for(CartaGrafica c : this.carteInTavola)
             c.setCarta(carteInTavola.get(i++));
 
-        i = 0;
-        for(boolean schiena : d.getSchieneAvversarie()){
-            schieneAvversarie.get(i++).setSchiena(schiena);
+        for (i = 0; i < schiene.length; i++) {
+            for (int j = 0; j < schiene[i].length; j++) {
+                schiene[i][j].setSchiena(d.getSchiene()[i][j]);
+            }
         }
 
         this.briscola.setCarta(d.getBriscola());
@@ -59,5 +64,8 @@ public class View {
 
     public CartaGrafica getCarta(int indice) {
         return carteInMano.get(indice);
+    }
+    public CartaGrafica getBriscola(){
+        return this.briscola;
     }
 }

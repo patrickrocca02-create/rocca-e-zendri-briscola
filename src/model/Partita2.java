@@ -27,8 +27,21 @@ public class Partita2 extends Partita{
          carteInTavola.add(null);
          carteInTavola.add(null);
 
-         turno = (int) (Math.random()* 2);
+         turno = (int) (Math.random() * 2);
      }
+
+    @Override
+    public int[] getIndiciGiocatoriSuccessivi(int giocatore) {
+        int[] indiciGiocatori = new int[2];
+        if(giocatore == 0) {
+            indiciGiocatori[0] = 0;
+            indiciGiocatori[1] = 1;
+        } else{
+            indiciGiocatori[0] = 1;
+            indiciGiocatori[1] = 0;
+        }
+        return indiciGiocatori;
+    }
 
      @Override
      public void processaMossa(Carta c){
@@ -40,76 +53,28 @@ public class Partita2 extends Partita{
 
              server.broadcastDisposizione(true);
 
-             Carta c1;
-             Carta c2;
+             int g1,g2;
+
              if(turno == 0) {
-                 c1 = carteInTavola.get(1);
-                 c2 = carteInTavola.get(0);
+                 g1 = 1;
+                 g2 = 0;
              }else{
-                 c1 = carteInTavola.get(0);
-                 c2 = carteInTavola.get(1);
+                 g1 = 0;
+                 g2 = 1;
              }
 
-             System.out.println("Carta 1: " + c1.toString());
-             System.out.println("Carta 2: " + c2.toString());
+             Carta c1 = carteInTavola.get(g1);
+             Carta c2 = carteInTavola.get(g2);
 
-             int winner;
-             int g1 = 0;
-             int g2 = turno;
+             turno = vincitore(c1,g1,c2,g2);
 
-             if(g2 == 0)
-                 g1 = 1;
-
-             if(c1.getSeme() == c2.getSeme()){
-
-                 if(c1.getNumero() > c2.getNumero())
-                     winner = g1;
-                 else
-                     winner = g2;
-
-                 switch(c1.getNumero()) {
-                     case 1: winner = g1; break;
-                     case 3:
-                         if(c2.getNumero() != 1)
-                             winner = g1;
-                         break;
-                 }
-
-                 switch(c2.getNumero()) {
-                     case 1: winner = g2; break;
-                     case 3:
-                         if(c1.getNumero() != 1)
-                             winner = g2;
-                         break;
-                 }
-
-             } else if (c1.getSeme() == briscola.getSeme())
-                 winner = g1;
-             else if (c2.getSeme() == briscola.getSeme())
-                 winner = g2;
-             else
-                 winner = g1;
-
-             turno = winner;
-
-             giocatori.get(winner).addPunti(c1.getPunti() + c2.getPunti());
+             giocatori.get(turno).addPunti(c1.getPunti() + c2.getPunti());
 
              giocata = 0;
 
-             for (int i = 0; i < carteInTavola.size(); i++) {
-                 carteInTavola.set(i,null);
-             }
+             clearCarteInTavola();
 
-             for(Giocatore g : giocatori) {
-                 System.out.println("Punti: " + g.getPunti());
-                 if(mazzo.size() > 0) {
-                     g.aggiungiCarta(prossimaCarta());
-                 }else if(!mazzoFinito) {
-                     g.aggiungiCarta(briscola);
-                     mazzoFinito = true;
-                 }
-             }
-             System.out.println(System.lineSeparator());
+             pescaCarte();
          }
          else {
              if (turno == 0)
@@ -122,6 +87,21 @@ public class Partita2 extends Partita{
      }
 
      @Override
+     public int[] getIndiciGiocatoriTurno(){
+         int[] indiciGiocatori = new int[2];
+
+         if(turno == 0) {
+             indiciGiocatori[0] = 1;
+             indiciGiocatori[1] = 0;
+         }else{
+             indiciGiocatori[0] = 0;
+             indiciGiocatori[1] = 1;
+         }
+
+         return indiciGiocatori;
+     }
+
+    @Override
     public int[] getVincitori(){
          int[] vincitori = new int[2];
 

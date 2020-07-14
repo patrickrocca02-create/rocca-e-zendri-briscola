@@ -33,6 +33,7 @@ public class Client extends Thread{
 
     public void inviaCarta(int indice){
         try{
+            System.out.println("Inviata la carta: " + view.getCarta(indice).getCarta());
             out.writeObject(view.getCarta(indice).getCarta());
             out.flush();
         }catch (Exception e) { e.printStackTrace(); }
@@ -55,7 +56,6 @@ public class Client extends Thread{
     public void run() {
 
         boolean fine = false;
-
 
         while (!fine) {
             Object inObj = null;
