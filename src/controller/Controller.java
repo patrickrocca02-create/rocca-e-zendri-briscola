@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import view.Animator;
 import view.View;
 
 import java.net.InetAddress;
@@ -13,6 +14,7 @@ public class Controller {
 
     private Client giocatore;
     private View view;
+    private Animator animator;
 
     @FXML private ImageView briscola;
     @FXML private ImageView carta1;
@@ -65,6 +67,7 @@ public class Controller {
         }
 
         view = new View(carteInTavola, briscola,carteInMano,schiene,mazzo);
+        animator = new Animator(carteInTavola);
 
         try {
             giocatore = new Client(InetAddress.getLocalHost(), 2201, view);
@@ -79,6 +82,7 @@ public class Controller {
         if(giocatore.isTurno() && view.getCarta(0).getCarta() != null) {
             giocatore.setTurno(false);
             giocatore.inviaCarta(0);
+            animator.mettiInTavola(carta1);
         }
     }
 
@@ -86,9 +90,8 @@ public class Controller {
     void onClickCarta2(MouseEvent event) {
         if(giocatore.isTurno() && view.getCarta(1).getCarta() != null) {
             giocatore.setTurno(false);
-            giocatore.inviaCarta(1);
-            if(view.getBriscola() == null)
-                carta2.setDisable(true);
+            //giocatore.inviaCarta(1);
+            animator.mettiInTavola(carta1);
         }
     }
 
@@ -97,8 +100,7 @@ public class Controller {
         if(giocatore.isTurno() && view.getCarta(2).getCarta() != null) {
             giocatore.setTurno(false);
             giocatore.inviaCarta(2);
-            if(view.getBriscola() == null)
-                carta3.setDisable(true);
+            animator.mettiInTavola(carta1);
         }
     }
 }
