@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.shape.Ellipse?>
+<?import javafx.scene.shape.Rectangle?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="600.0" styleClass="tavolo" stylesheets="@../css/stili.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.Controller">
+   <center>
+      <AnchorPane prefHeight="360.0" prefWidth="600.0" styleClass="tavolo" BorderPane.alignment="CENTER">
+         <children>
+            <Rectangle arcHeight="60.0" arcWidth="60.0" fill="#a15c1359" height="300.0" layoutX="50.0" layoutY="50.0" smooth="false" stroke="#a15c1323" strokeType="INSIDE" width="500.0" />
+            <Ellipse fill="#a15d1359" layoutX="300.0" layoutY="200.0" opacity="0.0" radiusX="270.0" radiusY="180.0" stroke="#a15c1369" strokeType="INSIDE" />
+            <ImageView fx:id="briscola" fitHeight="180.0" fitWidth="115.0" layoutX="350.0" layoutY="110.0" pickOnBounds="true" preserveRatio="true" rotate="-90.0" />
+            <ImageView fx:id="mazzo" fitHeight="196.0" fitWidth="136.0" layoutX="400.0" layoutY="100.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../carte/schiena.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="cartaInTavola1" fitHeight="180.0" fitWidth="115.0" layoutX="122.0" layoutY="198.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="cartaInTavola2" fitHeight="180.0" fitWidth="115.0" layoutX="122.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" />
+         </children>
+      </AnchorPane>
+   </center>
+   <bottom>
+      <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+         <children>
+            <Ellipse fill="#a15c134f" layoutX="300.0" layoutY="250.0" radiusX="230.0" radiusY="130.0" stroke="#a15c134f" strokeType="INSIDE" />
+            <ImageView fx:id="carta1" fitHeight="180.0" fitWidth="115.0" layoutX="113.0" layoutY="55.0" onMouseClicked="#onClickCarta1" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="carta2" fitHeight="180.0" fitWidth="115.0" layoutX="243.0" layoutY="55.0" onMouseClicked="#onClickCarta2" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="carta3" fitHeight="180.0" fitWidth="115.0" layoutX="373.0" layoutY="55.0" onMouseClicked="#onClickCarta3" pickOnBounds="true" preserveRatio="true" />
+         </children>
+      </AnchorPane>
+   </bottom>
+   <top>
+      <AnchorPane prefHeight="200.0" prefWidth="600.0" BorderPane.alignment="CENTER">
+         <children>
+            <Ellipse fill="#a15a134f" layoutX="300.0" radiusX="230.0" radiusY="100.0" stroke="#a15c134f" strokeType="INSIDE" />
+            <ImageView fx:id="schiena1" fitHeight="196.0" fitWidth="136.0" layoutX="372.5" layoutY="-50.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="schiena2" fitHeight="196.0" fitWidth="136.0" layoutX="242.5" layoutY="-50.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="schiena3" fitHeight="196.0" fitWidth="136.0" layoutX="112.5" layoutY="-50.0" pickOnBounds="true" preserveRatio="true" />
+         </children>
+      </AnchorPane>
+   </top>
+</BorderPane>

@@ -7,11 +7,13 @@ import model.Disposizione;
 import java.util.ArrayList;
 
 public class View {
-    ArrayList<CartaGrafica> carteInMano;
-    ArrayList<CartaGrafica> carteInTavola;
-    CartaGrafica[][] schiene;
-    CartaGrafica briscola;
-    CartaGrafica mazzo;
+    private ArrayList<CartaGrafica> carteInMano;
+    private ArrayList<CartaGrafica> carteInTavola;
+    private CartaGrafica[][] schiene;
+    private CartaGrafica briscola;
+    private CartaGrafica mazzo;
+
+    private boolean isAnimating;
 
     public View(ImageView[] carteInTavola, ImageView briscola, ImageView[] carteInMano, ImageView[][] schiene, ImageView mazzo){
         this.carteInMano = new ArrayList<CartaGrafica>();
@@ -35,9 +37,19 @@ public class View {
         this.briscola = new CartaGrafica(briscola);
 
         this.mazzo = new CartaGrafica(mazzo);
+
+        this.isAnimating = false;
     }
 
     public void aggiornaView(Disposizione d){
+        while (true){
+            try {
+                Thread.sleep(10);
+            }catch (Exception e){}
+            if(!isAnimating)
+                break;
+        }
+
         ArrayList<Carta> carteInMano = d.getCarteInMano();
         ArrayList<Carta> carteInTavola = d.getCarteInTavola();
 
@@ -67,5 +79,8 @@ public class View {
     }
     public CartaGrafica getBriscola(){
         return this.briscola;
+    }
+    public void setIsAnimating(boolean isAnimating){
+        this.isAnimating = isAnimating;
     }
 }
