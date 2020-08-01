@@ -15,7 +15,7 @@ public class ClientMain extends Application {
         String fileName = "view" + nGiocatori + ".fxml";
         Parent root = FXMLLoader.load(getClass().getResource(fileName));
         primaryStage.setTitle("Briscola");
-        primaryStage.setScene(new Scene(root));
+        primaryStage.setScene(new Scene(root,200,200));
         primaryStage.show();
     }
 

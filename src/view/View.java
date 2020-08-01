@@ -1,15 +1,17 @@
 package view;
 
+import javafx.application.Platform;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import model.Carta;
 import model.Disposizione;
 
+import java.io.FileInputStream;
 import java.util.ArrayList;
 
 public class View {
     private Pane tavola;
-
 
     private ArrayList<CartaGrafica> carteInMano;
     private ArrayList<CartaGrafica> carteInTavola;
@@ -59,13 +61,14 @@ public class View {
                 break;
         }
 
-        ArrayList<Carta> carteInMano = d.getCarteInMano();
-        ArrayList<Carta> carteInTavola = d.getCarteInTavola();
+        ArrayList<Carta> carteInManoD = d.getCarteInMano();
+        ArrayList<Carta> carteInTavolaD = d.getCarteInTavola();
 
         boolean nessunaCartaInMano = true;
-        for(CartaGrafica c : this.carteInMano)
+        for(CartaGrafica c : this.carteInMano) {
             if (c.getCarta() != null)
                 nessunaCartaInMano = false;
+        }
 
         if(nessunaCartaInMano){
             if(d.getBriscola() != null){
@@ -76,25 +79,55 @@ public class View {
         }else{
             int i = 0;
             for(CartaGrafica c : this.carteInMano) {
-                if (!c.equals(carteInMano.get(i))) {
+                if (!(c.getCarta() == null && carteInManoD.get(i) == null || (c.getCarta() != null && c.getCarta().equals(carteInManoD.get(i))))) {
                     if (this.carteInTavola.get(0).getCarta() == null) {
-                        System.out.println("Metti in tavola!");
-                        animator.mettiInTavola(this.carteInMano.get(i).getImageView(), this.carteInTavola.get(0).getImageView());
+                        ImageView cartaInMano = carteInMano.get(i).getImageView();
+                        ImageView cartaInTavola = carteInTavola.get(0).getImageView();
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                animator.mettiInTavola(cartaInMano, cartaInTavola);
+                            }
+                        });
                     } else {
                         //pesca
+                    }
+                }
+                i++;
+            }
+
+            for (i = 0; i < schiene.length; i++) {
+                for (int j = 0; j < schiene[i].length; j++) {
+                    if (schiene[i][j].isDiSchiena() != d.getSchiene()[i][j]) {
+                        if (schiene[i][j].isDiSchiena()) {
+                            ImageView schiena = schiene[i][j].getImageView();
+                            ImageView cartaInTavola = carteInTavola.get(i+1).getImageView();
+                            Carta nuovaCarta = d.getCarteInTavola().get(i+1);
+                            try{
+                                Image imgNuovaCarta = new Image(new FileInputStream("src/carte/" + nuovaCarta.getSeme() + " " + nuovaCarta.getNumero() + ".png"));
+                                Platform.runLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        animator.mettiInTavolaAltriGiocatori(schiena, cartaInTavola, imgNuovaCarta);
+                                    }
+                                });
+                            }catch (Exception e){e.printStackTrace();}
+                        }
                     }
                 }
             }
         }
 
+
+
         int i = 0;
         for(CartaGrafica c : this.carteInMano){
-            c.setCarta(carteInMano.get(i++));
+            c.setCarta(carteInManoD.get(i++));
         }
 
         i = 0;
         for(CartaGrafica c : this.carteInTavola)
-            c.setCarta(carteInTavola.get(i++));
+            c.setCarta(carteInTavolaD.get(i++));
 
         for (i = 0; i < schiene.length; i++) {
             for (int j = 0; j < schiene[i].length; j++) {
