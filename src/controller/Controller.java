@@ -15,7 +15,6 @@ public class Controller {
 
     private Client giocatore;
     private View view;
-    private Animator animator;
 
     @FXML private Pane tavola;
 
@@ -69,8 +68,7 @@ public class Controller {
             }
         }
 
-        view = new View(carteInTavola, briscola,carteInMano,schiene,mazzo);
-        animator = new Animator(carteInTavola, tavola, view);
+        view = new View(tavola, carteInTavola, briscola,carteInMano,schiene,mazzo);
 
         try {
             giocatore = new Client(InetAddress.getLocalHost(), 2201, view);
@@ -84,7 +82,6 @@ public class Controller {
     void onClickCarta1(MouseEvent event) {
         if(giocatore.isTurno() && view.getCarta(0).getCarta() != null) {
             giocatore.setTurno(false);
-            animator.mettiInTavola(carta1);
             giocatore.inviaCarta(0);
         }
     }
@@ -93,7 +90,6 @@ public class Controller {
     void onClickCarta2(MouseEvent event) {
         if(giocatore.isTurno() && view.getCarta(1).getCarta() != null) {
             giocatore.setTurno(false);
-            animator.mettiInTavola(carta2);
             giocatore.inviaCarta(1);
         }
     }
@@ -102,7 +98,6 @@ public class Controller {
     void onClickCarta3(MouseEvent event) {
         if(giocatore.isTurno() && view.getCarta(2).getCarta() != null) {
             giocatore.setTurno(false);
-            animator.mettiInTavola(carta3);
             giocatore.inviaCarta(2);
         }
     }

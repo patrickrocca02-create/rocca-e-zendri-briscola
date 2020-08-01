@@ -1,21 +1,30 @@
 package view;
 
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
 import model.Carta;
 import model.Disposizione;
 
 import java.util.ArrayList;
 
 public class View {
+    private Pane tavola;
+
+
     private ArrayList<CartaGrafica> carteInMano;
     private ArrayList<CartaGrafica> carteInTavola;
     private CartaGrafica[][] schiene;
     private CartaGrafica briscola;
     private CartaGrafica mazzo;
 
+    private View precView;
+    private Animator animator;
+
     private boolean isAnimating;
 
-    public View(ImageView[] carteInTavola, ImageView briscola, ImageView[] carteInMano, ImageView[][] schiene, ImageView mazzo){
+    public View(Pane tavola, ImageView[] carteInTavola, ImageView briscola, ImageView[] carteInMano, ImageView[][] schiene, ImageView mazzo){
+        this.tavola = tavola;
+
         this.carteInMano = new ArrayList<CartaGrafica>();
         this.carteInMano.add(new CartaGrafica(carteInMano[0]));
         this.carteInMano.add(new CartaGrafica(carteInMano[1]));
@@ -38,7 +47,7 @@ public class View {
 
         this.mazzo = new CartaGrafica(mazzo);
 
-        this.isAnimating = false;
+        this.animator = new Animator(this.tavola);
     }
 
     public void aggiornaView(Disposizione d){
@@ -52,6 +61,31 @@ public class View {
 
         ArrayList<Carta> carteInMano = d.getCarteInMano();
         ArrayList<Carta> carteInTavola = d.getCarteInTavola();
+
+        boolean nessunaCartaInMano = true;
+        for(CartaGrafica c : this.carteInMano)
+            if (c.getCarta() != null)
+                nessunaCartaInMano = false;
+
+        if(nessunaCartaInMano){
+            if(d.getBriscola() != null){
+                //fine partita
+            }else {
+                //inizio partita
+            }
+        }else{
+            int i = 0;
+            for(CartaGrafica c : this.carteInMano) {
+                if (!c.equals(carteInMano.get(i))) {
+                    if (this.carteInTavola.get(0).getCarta() == null) {
+                        System.out.println("Metti in tavola!");
+                        animator.mettiInTavola(this.carteInMano.get(i).getImageView(), this.carteInTavola.get(0).getImageView());
+                    } else {
+                        //pesca
+                    }
+                }
+            }
+        }
 
         int i = 0;
         for(CartaGrafica c : this.carteInMano){
@@ -72,6 +106,8 @@ public class View {
 
         if(d.getBriscola() == null)
             this.mazzo.setCarta(null);
+
+        precView = this;
     }
 
     public CartaGrafica getCarta(int indice) {

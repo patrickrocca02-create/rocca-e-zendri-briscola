@@ -9,8 +9,10 @@ import java.io.FileInputStream;
 public class CartaGrafica {
     private Carta carta;
     private ImageView img;
+    private boolean diSchiena;
 
     public CartaGrafica(ImageView img){
+        this.diSchiena = false;
         this.img = img;
     }
 
@@ -35,6 +37,7 @@ public class CartaGrafica {
     }
 
     public void setSchiena(boolean schiena){
+        this.diSchiena = schiena;
         if(schiena){
             try {
                 img.setImage(new Image(new FileInputStream("src/carte/schiena.png")));
@@ -42,5 +45,29 @@ public class CartaGrafica {
         }else{
             setCarta(null);
         }
+    }
+
+    public boolean isDiSchiena(){
+        return this.diSchiena;
+    }
+
+    public ImageView getImageView(){
+        return img;
+    }
+
+    public boolean equals(CartaGrafica c){
+        if(this.diSchiena)
+            if(c.isDiSchiena())
+                return true;
+            else
+                return false;
+
+        if(this.carta == null)
+            if(c.getCarta() == null && !c.isDiSchiena())
+                return true;
+            else
+                return false;
+
+        return this.carta.equals(c.getCarta());
     }
 }

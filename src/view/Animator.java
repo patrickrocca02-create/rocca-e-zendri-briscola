@@ -14,25 +14,23 @@ import javafx.util.Duration;
 
 public class Animator {
 
-    private Punto[] carteInTavola;
     private Pane tavola;
-    private View view;
 
-    public Animator(ImageView[] carteInTavola, Pane tavola, View view){
+    public Animator(Pane tavola){
         this.tavola = tavola;
-        this.view = view;
-        this.carteInTavola = new Punto[carteInTavola.length];
-        for (int i = 0; i < carteInTavola.length; i++)
-            this.carteInTavola[i] = new Punto(carteInTavola[i].getLayoutX(),carteInTavola[i].getLayoutY());
-        System.out.println(carteInTavola[0].getX() + " " + carteInTavola[0].getY());
     }
 
-    public void mettiInTavola(ImageView carta){
-        Path path = new Path();
-        path.getElements().add(new MoveTo(carta.getFitWidth()/2,carta.getFitHeight()/2));
+    public void mettiInTavola(ImageView carta, ImageView cartaInTavola){
+        ImageView copia = copyImageView(carta);
 
-        double x = carteInTavola[0].getX() - carta.getLayoutX() + carta.getFitWidth()/2;
-        double y = carteInTavola[0].getY() - carta.getLayoutY() + carta.getFitHeight()/2;
+        carta.setVisible(false);
+        cartaInTavola.setVisible(false);
+
+        Path path = new Path();
+        path.getElements().add(new MoveTo(copia.getFitWidth()/2,copia.getFitHeight()/2));
+
+        double x = cartaInTavola.getLayoutX() - carta.getLayoutX() + carta.getFitWidth()/2;
+        double y = cartaInTavola.getLayoutY() - carta.getLayoutY() + carta.getFitHeight()/2;
         path.getElements().add(new LineTo(x,y));
         PathTransition pathTransition = new PathTransition();
         pathTransition.setDuration(Duration.millis(1000));
@@ -44,13 +42,15 @@ public class Animator {
         pathTransition.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(final ActionEvent actionEvent) {
-                carta.setTranslateX(0);
-                carta.setTranslateY(0);
-                view.setIsAnimating(false);
+                //carta.setTranslateX(0);
+                //carta.setTranslateY(0);
+                //view.setIsAnimating(false);
+                carta.setVisible(true);
+                cartaInTavola.setVisible(true);
+                tavola.getChildren().remove(copia);
             }
         });
 
-        view.setIsAnimating(true);
         pathTransition.play();
     }
 
