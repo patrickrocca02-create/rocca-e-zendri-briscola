@@ -17,19 +17,42 @@ public class Animator {
         this.tavola = tavola;
     }
 
-    public void mettiInTavola(ImageView carta, ImageView cartaInTavola){
-        ImageView copia = copyImageView(carta);
+    public void mettiInTavola(ImageView carta, ImageView cartainTavola){
+        carta.setVisible(false);
+        cartainTavola.setVisible(false);
 
+        sposta(carta, cartainTavola, 750);
+    }
+
+    public void mettiInTavolaAltriGiocatori(ImageView carta, ImageView cartaInTavola, Image imgNuovaCarta){
         carta.setVisible(false);
         cartaInTavola.setVisible(false);
 
-        TranslateTransition translateTransition = new TranslateTransition(Duration.millis(750), copia);
+        scopriESposta(carta, cartaInTavola, imgNuovaCarta, 1000);
+    }
+
+    public void pescaCarta(ImageView mazzo, ImageView cartaInMano, Image imgNuovaCarta){
+        cartaInMano.setVisible(false);
+
+        scopriESposta(mazzo,  cartaInMano, imgNuovaCarta, 1000);
+    }
+
+    public void pescaAltriGiocatori(ImageView mazzo, ImageView destinazione){
+        destinazione.setVisible(false);
+
+        sposta(mazzo, destinazione, 750);
+    }
+
+    private void sposta(ImageView carta, ImageView destinazione, int durata){
+        ImageView copia = copyImageView(carta);
+
+        TranslateTransition translateTransition = new TranslateTransition(Duration.millis(durata), copia);
 
         translateTransition.setFromX(0);
         translateTransition.setFromY(0);
 
-        double x = cartaInTavola.getLayoutX() - copia.getLayoutX();
-        double y = cartaInTavola.getLayoutY() - copia.getLayoutY();
+        double x = destinazione.getLayoutX() - copia.getLayoutX();
+        double y = destinazione.getLayoutY() - copia.getLayoutY();
 
         translateTransition.setToX(x);
         translateTransition.setToY(y);
@@ -37,11 +60,8 @@ public class Animator {
         translateTransition.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(final ActionEvent actionEvent) {
-                //carta.setTranslateX(0);
-                //carta.setTranslateY(0);
-                //view.setIsAnimating(false);
                 carta.setVisible(true);
-                cartaInTavola.setVisible(true);
+                destinazione.setVisible(true);
                 tavola.getChildren().remove(copia);
             }
         });
@@ -50,30 +70,23 @@ public class Animator {
         translateTransition.play();
     }
 
-    public void mettiInTavolaAltriGiocatori(ImageView carta, ImageView cartaInTavola, Image imgNuovaCarta){
-        System.out.println(carta);
-        System.out.println(cartaInTavola);
-        System.out.println(imgNuovaCarta);
-
+    private void scopriESposta(ImageView carta, ImageView destinazione, Image imgNuovaCarta, int durata){
         ImageView copia = copyImageView(carta);
         copia.setRotationAxis(new Point3D(0,1,0));
 
-        carta.setVisible(false);
-        cartaInTavola.setVisible(false);
-
         SequentialTransition sequentialTransition = new SequentialTransition();
-        ParallelTransition parallelTransition1 = new ParallelTransition();
+        ParallelTransition parallelTransition1 = new ParallelTransition(copia);
 
-        TranslateTransition translateTransition1 = new TranslateTransition(Duration.millis(375), copia);
+        TranslateTransition translateTransition1 = new TranslateTransition(Duration.millis(durata/2), copia);
         translateTransition1.setFromX(0);
         translateTransition1.setFromY(0);
-        double x = cartaInTavola.getLayoutX() - copia.getLayoutX();
-        double y = cartaInTavola.getLayoutY() - copia.getLayoutY();
+        double x = destinazione.getLayoutX() - copia.getLayoutX();
+        double y = destinazione.getLayoutY() - copia.getLayoutY();
         translateTransition1.setToX(x/2);
         translateTransition1.setToY(y/2);
 
-        RotateTransition rotateTransition1 = new RotateTransition(Duration.millis(375));
-        rotateTransition1.setFromAngle(0);
+        RotateTransition rotateTransition1 = new RotateTransition(Duration.millis(durata/2), copia);
+        rotateTransition1.setFromAngle(180);
         rotateTransition1.setToAngle(90);
 
         parallelTransition1.getChildren().addAll(translateTransition1, rotateTransition1);
@@ -85,15 +98,15 @@ public class Animator {
             }
         });
 
-        ParallelTransition parallelTransition2 = new ParallelTransition();
+        ParallelTransition parallelTransition2 = new ParallelTransition(copia);
 
-        TranslateTransition translateTransition2 = new TranslateTransition(Duration.millis(375), copia);
+        TranslateTransition translateTransition2 = new TranslateTransition(Duration.millis(durata/2), copia);
         translateTransition2.setFromX(x/2);
-        translateTransition2.setFromY(x/2);
+        translateTransition2.setFromY(y/2);
         translateTransition2.setToX(x);
         translateTransition2.setToY(y);
 
-        RotateTransition rotateTransition2 = new RotateTransition(Duration.millis(375));
+        RotateTransition rotateTransition2 = new RotateTransition(Duration.millis(durata/2), copia);
         rotateTransition2.setFromAngle(90);
         rotateTransition2.setToAngle(0);
 
@@ -105,13 +118,13 @@ public class Animator {
             @Override
             public void handle(final ActionEvent actionEvent) {
                 carta.setVisible(true);
-                cartaInTavola.setVisible(true);
+                destinazione.setVisible(true);
                 tavola.getChildren().remove(copia);
             }
         });
 
         sequentialTransition.setCycleCount(1);
-        parallelTransition1.play();
+        sequentialTransition.play();
     }
 
     private ImageView copyImageView(ImageView iv){

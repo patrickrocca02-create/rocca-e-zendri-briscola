@@ -51,7 +51,7 @@ public class Partita2 extends Partita{
 
          if(giocata == 1){
 
-             server.broadcastDisposizione(true);
+             server.broadcastDisposizione();
 
              int g1,g2;
 

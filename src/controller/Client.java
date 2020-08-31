@@ -65,7 +65,7 @@ public class Client extends Thread{
 
             if (inObj instanceof Disposizione) {
                 Disposizione d = (Disposizione) inObj;
-                this.turno = d.isTurno();
+                this.turno = d.getTurno() == d.getID();
                 view.aggiornaView(d);
                 try {
                     Thread.sleep(1000);

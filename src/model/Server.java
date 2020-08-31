@@ -33,12 +33,12 @@ public class Server {
         for (int i = 0; i < partita.getNGiocatori(); i++) {
             try {
                 System.out.println("In attesa del giocatore " + i + "...");
-                clients.add(new Client(ss.accept()));
+                clients.add(new Client(ss.accept(),i));
                 System.out.println("Giocatore " + i + " connesso");
             } catch(Exception e) {}
         }
 
-        broadcastDisposizione(false);
+        broadcastDisposizione();
 
         boolean finito = false;
         while(!finito){
@@ -46,7 +46,7 @@ public class Server {
 
             partita.processaMossa(c);
 
-            broadcastDisposizione(false);
+            broadcastDisposizione();
 
             finito = true;
             for(Giocatore g : partita.getGiocatori())
@@ -66,13 +66,10 @@ public class Server {
         }catch(Exception e){}
     }
 
-    protected void broadcastDisposizione(boolean fineMano){
+    protected void broadcastDisposizione(){
         int i = 0;
         for(Giocatore g : partita.getGiocatori()) {
-            boolean turno = false;
-
-            if (i == partita.getTurno() && !fineMano)
-                turno = true;
+            int turno = partita.getTurno();
 
             ArrayList<Carta> carteInMano = new ArrayList<>(g.getCarteInMano());
             ArrayList<Carta> carteInTavola = new ArrayList<>();
@@ -91,7 +88,7 @@ public class Server {
                 schiene[j] = partita.getGiocatori().get(indiciGiocatoriSuccessivi[j+1]).getListaSchiene();
             }
 
-            Disposizione d = new Disposizione(carteInMano, carteInTavola, briscola, turno,schiene);
+            Disposizione d = new Disposizione(i, carteInMano, carteInTavola, briscola, turno,schiene);
             clients.get(i++).inviaDisposizione(d);
         }
     }

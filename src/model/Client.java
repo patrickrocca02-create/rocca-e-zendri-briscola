@@ -4,11 +4,13 @@ import java.io.*;
 import java.net.Socket;
 
 public class Client {
+    private int ID;
     private Socket s;
     private ObjectInputStream in;
     private ObjectOutputStream out;
 
-    public Client(Socket s){
+    public Client(Socket s, int ID){
+        this.ID = ID;
         this.s = s;
         try{
             in = new ObjectInputStream(s.getInputStream());

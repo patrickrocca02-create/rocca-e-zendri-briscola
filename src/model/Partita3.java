@@ -47,7 +47,7 @@ public class Partita3 extends Partita{
 
         if(giocata == 2){
 
-            server.broadcastDisposizione(true);
+            server.broadcastDisposizione();
 
             int[] indiciGiocatori = getIndiciGiocatoriTurno();
             int g1 = indiciGiocatori[0], g2= indiciGiocatori[1], g3= indiciGiocatori[2];

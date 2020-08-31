@@ -22,8 +22,6 @@ public class View {
     private View precView;
     private Animator animator;
 
-    private boolean isAnimating;
-
     public View(Pane tavola, ImageView[] carteInTavola, ImageView briscola, ImageView[] carteInMano, ImageView[][] schiene, ImageView mazzo){
         this.tavola = tavola;
 
@@ -53,14 +51,6 @@ public class View {
     }
 
     public void aggiornaView(Disposizione d){
-        while (true){
-            try {
-                Thread.sleep(10);
-            }catch (Exception e){}
-            if(!isAnimating)
-                break;
-        }
-
         ArrayList<Carta> carteInManoD = d.getCarteInMano();
         ArrayList<Carta> carteInTavolaD = d.getCarteInTavola();
 
@@ -70,10 +60,12 @@ public class View {
                 nessunaCartaInMano = false;
         }
 
+        if(d.getTurno() == d.getID()){
+
+        }
+
         if(nessunaCartaInMano){
-            if(d.getBriscola() != null){
-                //fine partita
-            }else {
+            if(d.getBriscola() != null) {
                 //inizio partita
             }
         }else{
@@ -90,35 +82,80 @@ public class View {
                             }
                         });
                     } else {
-                        //pesca
+                        ImageView mazzo = this.mazzo.getImageView();
+                        ImageView cartaInMano = carteInMano.get(i).getImageView();
+                        Carta nuovaCarta = d.getCarteInMano().get(i);
+                        try{
+                            Image imgNuovaCarta = new Image(new FileInputStream("src/carte/" + nuovaCarta.getSeme() + " " + nuovaCarta.getNumero() + ".png"));
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    animator.pescaCarta(mazzo, cartaInMano, imgNuovaCarta);
+                                }
+                            });
+                        }catch (Exception e){}
                     }
                 }
                 i++;
             }
 
-            for (i = 0; i < schiene.length; i++) {
-                for (int j = 0; j < schiene[i].length; j++) {
-                    if (schiene[i][j].isDiSchiena() != d.getSchiene()[i][j]) {
-                        if (schiene[i][j].isDiSchiena()) {
-                            ImageView schiena = schiene[i][j].getImageView();
-                            ImageView cartaInTavola = carteInTavola.get(i+1).getImageView();
-                            Carta nuovaCarta = d.getCarteInTavola().get(i+1);
-                            try{
-                                Image imgNuovaCarta = new Image(new FileInputStream("src/carte/" + nuovaCarta.getSeme() + " " + nuovaCarta.getNumero() + ".png"));
+            int[] IDs = new int[schiene.length + 1];
+            IDs[0] = d.getID();
+            for(i = 1; i < IDs.length; i ++)
+                if (IDs[i-1] == IDs.length)
+                    IDs[i] = 0;
+                else
+                    IDs[i] = IDs[i-1] + 1;
+
+
+            for (i = 0; i < IDs.length; i++) {
+                if(IDs[i] == d.getID()){
+                    ImageView mazzo = this.mazzo.getImageView();
+                    ImageView cartaInMano = carteInMano.get(i).getImageView();
+                    Carta nuovaCarta = d.getCarteInMano().get(i);
+                    try{
+                        Image imgNuovaCarta = new Image(new FileInputStream("src/carte/" + nuovaCarta.getSeme() + " " + nuovaCarta.getNumero() + ".png"));
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                animator.pescaCarta(mazzo, cartaInMano, imgNuovaCarta);
+                            }
+                        });
+                    }catch (Exception e){}
+                }
+                else {
+                    for (int j = 0; j < schiene[i].length; j++) {
+                        if (schiene[i][j].isDiSchiena() != d.getSchiene()[i][j]) {
+                            if (schiene[i][j].isDiSchiena()) {
+                                ImageView schiena = schiene[i][j].getImageView();
+                                ImageView cartaInTavola = carteInTavola.get(i + 1).getImageView();
+                                Carta nuovaCarta = d.getCarteInTavola().get(i + 1);
+                                try {
+                                    Image imgNuovaCarta = new Image(new FileInputStream("src/carte/" + nuovaCarta.getSeme() + " " + nuovaCarta.getNumero() + ".png"));
+                                    Platform.runLater(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            animator.mettiInTavolaAltriGiocatori(schiena, cartaInTavola, imgNuovaCarta);
+                                        }
+                                    });
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            } else {
+                                ImageView mazzo = this.mazzo.getImageView();
+                                ImageView cartaInMano = schiene[i][j].getImageView();
                                 Platform.runLater(new Runnable() {
                                     @Override
                                     public void run() {
-                                        animator.mettiInTavolaAltriGiocatori(schiena, cartaInTavola, imgNuovaCarta);
+                                        animator.pescaAltriGiocatori(mazzo, cartaInMano);
                                     }
                                 });
-                            }catch (Exception e){e.printStackTrace();}
+                            }
                         }
                     }
                 }
             }
         }
-
-
 
         int i = 0;
         for(CartaGrafica c : this.carteInMano){
@@ -148,8 +185,5 @@ public class View {
     }
     public CartaGrafica getBriscola(){
         return this.briscola;
-    }
-    public void setIsAnimating(boolean isAnimating){
-        this.isAnimating = isAnimating;
     }
 }

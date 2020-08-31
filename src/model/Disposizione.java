@@ -7,10 +7,12 @@ public class Disposizione implements Serializable {
     private ArrayList<Carta> carteInMano;
     private ArrayList<Carta> carteInTavola;
     private Carta briscola;
-    private boolean turno;
+    private int turno;
     private boolean[][] schiene;
+    private int ID;
 
-    public Disposizione(ArrayList<Carta> carteInMano, ArrayList<Carta> cartaInTavola, Carta briscola, boolean turno,boolean[][] schiene){
+    public Disposizione(int ID, ArrayList<Carta> carteInMano, ArrayList<Carta> cartaInTavola, Carta briscola, int turno,boolean[][] schiene){
+        this.ID = ID;
         this.carteInMano = carteInMano;
         this.carteInTavola = cartaInTavola;
         this.briscola = briscola;
@@ -18,6 +20,9 @@ public class Disposizione implements Serializable {
         this.schiene = schiene;
     }
 
+    public int getID(){
+        return this.ID;
+    }
     public ArrayList<Carta> getCarteInMano() {
         return carteInMano;
     }
@@ -27,7 +32,7 @@ public class Disposizione implements Serializable {
     public Carta getBriscola() {
         return briscola;
     }
-    public boolean isTurno() {
+    public int getTurno() {
         return turno;
     }
     public boolean[][] getSchiene(){
