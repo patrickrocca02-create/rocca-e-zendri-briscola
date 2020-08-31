@@ -7,6 +7,7 @@ import javafx.geometry.Point3D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 public class Animator {
@@ -72,7 +73,6 @@ public class Animator {
 
     private void scopriESposta(ImageView carta, ImageView destinazione, Image imgNuovaCarta, int durata){
         ImageView copia = copyImageView(carta);
-        copia.setRotationAxis(new Point3D(0,1,0));
 
         SequentialTransition sequentialTransition = new SequentialTransition();
         ParallelTransition parallelTransition1 = new ParallelTransition(copia);
@@ -86,6 +86,7 @@ public class Animator {
         translateTransition1.setToY(y/2);
 
         RotateTransition rotateTransition1 = new RotateTransition(Duration.millis(durata/2), copia);
+        rotateTransition1.setAxis(new Point3D(0,1,0));
         rotateTransition1.setFromAngle(180);
         rotateTransition1.setToAngle(90);
 
@@ -109,6 +110,7 @@ public class Animator {
         RotateTransition rotateTransition2 = new RotateTransition(Duration.millis(durata/2), copia);
         rotateTransition2.setFromAngle(90);
         rotateTransition2.setToAngle(0);
+        rotateTransition2.setAxis(new Point3D(0,1,0));
 
         parallelTransition2.getChildren().addAll(translateTransition2, rotateTransition2);
 
@@ -130,7 +132,7 @@ public class Animator {
     private ImageView copyImageView(ImageView iv){
         ImageView newIv = new ImageView();
         newIv.setImage(iv.getImage());
-        newIv.setRotate(iv.getRotate());
+        newIv.getTransforms().add(new Rotate(iv.getRotate(), iv.getRotationAxis()));
         newIv.setLayoutX(iv.getLayoutX());
         newIv.setLayoutY(iv.getLayoutY());
         newIv.setFitWidth(iv.getFitWidth());

@@ -60,10 +60,6 @@ public class View {
                 nessunaCartaInMano = false;
         }
 
-        if(d.getTurno() == d.getID()){
-
-        }
-
         if(nessunaCartaInMano){
             if(d.getBriscola() != null) {
                 //inizio partita
@@ -81,69 +77,81 @@ public class View {
                                 animator.mettiInTavola(cartaInMano, cartaInTavola);
                             }
                         });
-                    } else {
-                        ImageView mazzo = this.mazzo.getImageView();
-                        ImageView cartaInMano = carteInMano.get(i).getImageView();
-                        Carta nuovaCarta = d.getCarteInMano().get(i);
-                        try{
-                            Image imgNuovaCarta = new Image(new FileInputStream("src/carte/" + nuovaCarta.getSeme() + " " + nuovaCarta.getNumero() + ".png"));
-                            Platform.runLater(new Runnable() {
-                                @Override
-                                public void run() {
-                                    animator.pescaCarta(mazzo, cartaInMano, imgNuovaCarta);
-                                }
-                            });
-                        }catch (Exception e){}
                     }
                 }
                 i++;
             }
 
+            for (i = 0; i < schiene.length; i++){
+                for (int j = 0; j < schiene[i].length; j++) {
+                    if (schiene[i][j].isDiSchiena() != d.getSchiene()[i][j]) {
+                        if (schiene[i][j].isDiSchiena()) {
+                            ImageView schiena = schiene[i][j].getImageView();
+                            ImageView cartaInTavola = carteInTavola.get(i + 1).getImageView();
+                            Carta nuovaCarta = d.getCarteInTavola().get(i + 1);
+                            try {
+                                Image imgNuovaCarta = new Image(new FileInputStream("src/carte/" + nuovaCarta.getSeme() + " " + nuovaCarta.getNumero() + ".png"));
+                                Platform.runLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        animator.mettiInTavolaAltriGiocatori(schiena, cartaInTavola, imgNuovaCarta);
+                                    }
+                                });
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+            }
+
             int[] IDs = new int[schiene.length + 1];
             IDs[0] = d.getID();
             for(i = 1; i < IDs.length; i ++)
-                if (IDs[i-1] == IDs.length)
+                if (IDs[i-1] == IDs.length - 1)
                     IDs[i] = 0;
                 else
                     IDs[i] = IDs[i-1] + 1;
 
+            int indexOfTurno = 0;
+            for(i = 0; i < IDs.length; i++)
+                if (IDs[i] == d.getTurno()) {
+                    indexOfTurno = i;
+                    break;
+                }
+
+            IDs[0] = indexOfTurno;
+            for(i = 1; i < IDs.length; i ++)
+                if (IDs[i-1] == IDs.length - 1)
+                    IDs[i] = 0;
+                else
+                    IDs[i] = IDs[i-1] + 1;
 
             for (i = 0; i < IDs.length; i++) {
-                if(IDs[i] == d.getID()){
-                    ImageView mazzo = this.mazzo.getImageView();
-                    ImageView cartaInMano = carteInMano.get(i).getImageView();
-                    Carta nuovaCarta = d.getCarteInMano().get(i);
-                    try{
-                        Image imgNuovaCarta = new Image(new FileInputStream("src/carte/" + nuovaCarta.getSeme() + " " + nuovaCarta.getNumero() + ".png"));
-                        Platform.runLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                animator.pescaCarta(mazzo, cartaInMano, imgNuovaCarta);
+                if(IDs[i] == 0) {
+                    int j = 0;
+                    for (CartaGrafica c : this.carteInMano) {
+                        if (!(c.getCarta() == null && carteInManoD.get(j) == null || (c.getCarta() != null && c.getCarta().equals(carteInManoD.get(j))))) {
+                            if (this.carteInTavola.get(0).getCarta() == null) {
+                                ImageView cartaInMano = carteInMano.get(j).getImageView();
+                                ImageView cartaInTavola = carteInTavola.get(0).getImageView();
+                                Platform.runLater(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        animator.mettiInTavola(cartaInMano, cartaInTavola);
+                                    }
+                                });
                             }
-                        });
-                    }catch (Exception e){}
+                        }
+                        j++;
+                    }
                 }
                 else {
-                    for (int j = 0; j < schiene[i].length; j++) {
-                        if (schiene[i][j].isDiSchiena() != d.getSchiene()[i][j]) {
-                            if (schiene[i][j].isDiSchiena()) {
-                                ImageView schiena = schiene[i][j].getImageView();
-                                ImageView cartaInTavola = carteInTavola.get(i + 1).getImageView();
-                                Carta nuovaCarta = d.getCarteInTavola().get(i + 1);
-                                try {
-                                    Image imgNuovaCarta = new Image(new FileInputStream("src/carte/" + nuovaCarta.getSeme() + " " + nuovaCarta.getNumero() + ".png"));
-                                    Platform.runLater(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            animator.mettiInTavolaAltriGiocatori(schiena, cartaInTavola, imgNuovaCarta);
-                                        }
-                                    });
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            } else {
+                    for (int j = 0; j < schiene[IDs[i]-1].length; j++) {
+                        if (schiene[IDs[i]-1][j].isDiSchiena() != d.getSchiene()[IDs[i]-1][j]) {
+                            if (!schiene[IDs[i]-1][j].isDiSchiena()) {
                                 ImageView mazzo = this.mazzo.getImageView();
-                                ImageView cartaInMano = schiene[i][j].getImageView();
+                                ImageView cartaInMano = schiene[IDs[i]-1][j].getImageView();
                                 Platform.runLater(new Runnable() {
                                     @Override
                                     public void run() {
