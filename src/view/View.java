@@ -22,6 +22,8 @@ public class View {
     private View precView;
     private Animator animator;
 
+    private int[] posGiocatori;
+
     public View(Pane tavola, ImageView[] carteInTavola, ImageView briscola, ImageView[] carteInMano, ImageView[][] schiene, ImageView mazzo){
         this.tavola = tavola;
 
@@ -48,6 +50,23 @@ public class View {
         this.mazzo = new CartaGrafica(mazzo);
 
         this.animator = new Animator(this.tavola);
+
+        this.posGiocatori = new int[this.carteInTavola.size()];
+        posGiocatori[0] = 0;
+        switch (this.posGiocatori.length){
+            case 2:
+                posGiocatori[1] = 2;
+                break;
+            case 3:
+                posGiocatori[1] = 2;
+                posGiocatori[2] = 3;
+                break;
+            case 4:
+                posGiocatori[1] = 1;
+                posGiocatori[2] = 2;
+                posGiocatori[3] = 3;
+                break;
+        }
     }
 
     public void aggiornaView(Disposizione d){
@@ -66,11 +85,12 @@ public class View {
             }
         }else{
             int i = 0;
+            //messa in tavola della carta del giocatore principale
             for(CartaGrafica c : this.carteInMano) {
                 if (!(c.getCarta() == null && carteInManoD.get(i) == null || (c.getCarta() != null && c.getCarta().equals(carteInManoD.get(i))))) {
                     if (this.carteInTavola.get(0).getCarta() == null) {
-                        ImageView cartaInMano = carteInMano.get(i).getImageView();
-                        ImageView cartaInTavola = carteInTavola.get(0).getImageView();
+                        ImageView cartaInMano = this.carteInMano.get(i).getImageView();
+                        ImageView cartaInTavola = this.carteInTavola.get(0).getImageView();
                         Platform.runLater(new Runnable() {
                             @Override
                             public void run() {
@@ -82,19 +102,21 @@ public class View {
                 i++;
             }
 
-            for (i = 0; i < schiene.length; i++){
-                for (int j = 0; j < schiene[i].length; j++) {
-                    if (schiene[i][j].isDiSchiena() != d.getSchiene()[i][j]) {
-                        if (schiene[i][j].isDiSchiena()) {
-                            ImageView schiena = schiene[i][j].getImageView();
-                            ImageView cartaInTavola = carteInTavola.get(i + 1).getImageView();
+            //messa in tavola delle carte degli altri giocatori
+            for (i = 0; i < this.schiene.length; i++){
+                for (int j = 0; j < this.schiene[i].length; j++) {
+                    if (this.schiene[i][j].isDiSchiena() != d.getSchiene()[i][j]) {
+                        if (this.schiene[i][j].isDiSchiena()) {
+                            ImageView schiena = this.schiene[i][j].getImageView();
+                            ImageView cartaInTavola = this.carteInTavola.get(i + 1).getImageView();
                             Carta nuovaCarta = d.getCarteInTavola().get(i + 1);
+                            final int posGiocatore = posGiocatori[i + 1];
                             try {
                                 Image imgNuovaCarta = new Image(new FileInputStream("src/carte/" + nuovaCarta.getSeme() + " " + nuovaCarta.getNumero() + ".png"));
                                 Platform.runLater(new Runnable() {
                                     @Override
                                     public void run() {
-                                        animator.mettiInTavolaAltriGiocatori(schiena, cartaInTavola, imgNuovaCarta);
+                                        animator.mettiInTavolaAltriGiocatori(schiena, cartaInTavola, imgNuovaCarta, posGiocatore);
                                     }
                                 });
                             } catch (Exception e) {
@@ -105,59 +127,100 @@ public class View {
                 }
             }
 
-            int[] IDs = new int[schiene.length + 1];
-            IDs[0] = d.getID();
-            for(i = 1; i < IDs.length; i ++)
-                if (IDs[i-1] == IDs.length - 1)
-                    IDs[i] = 0;
-                else
-                    IDs[i] = IDs[i-1] + 1;
-
-            int indexOfTurno = 0;
-            for(i = 0; i < IDs.length; i++)
-                if (IDs[i] == d.getTurno()) {
-                    indexOfTurno = i;
+            //pesca delle carte
+            boolean pesca = true;
+            for(Carta c : carteInTavolaD)
+                if (c != null){
+                    pesca = false;
                     break;
                 }
 
-            IDs[0] = indexOfTurno;
-            for(i = 1; i < IDs.length; i ++)
-                if (IDs[i-1] == IDs.length - 1)
-                    IDs[i] = 0;
-                else
-                    IDs[i] = IDs[i-1] + 1;
+            if(pesca){
+                int[] IDs = new int[this.schiene.length + 1];
+                //allineamento degli ID client con gli ID server
+                IDs[0] = d.getID();
+                for(i = 1; i < IDs.length; i ++)
+                    if (IDs[i-1] == IDs.length - 1)
+                        IDs[i] = 0;
+                    else
+                        IDs[i] = IDs[i-1] + 1;
 
-            for (i = 0; i < IDs.length; i++) {
-                if(IDs[i] == 0) {
-                    int j = 0;
-                    for (CartaGrafica c : this.carteInMano) {
-                        if (!(c.getCarta() == null && carteInManoD.get(j) == null || (c.getCarta() != null && c.getCarta().equals(carteInManoD.get(j))))) {
-                            if (this.carteInTavola.get(0).getCarta() == null) {
-                                ImageView cartaInMano = carteInMano.get(j).getImageView();
-                                ImageView cartaInTavola = carteInTavola.get(0).getImageView();
-                                Platform.runLater(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        animator.mettiInTavola(cartaInMano, cartaInTavola);
-                                    }
-                                });
-                            }
-                        }
-                        j++;
+                //ID client del vincitore
+                int indexOfTurno = 0;
+                for(i = 0; i < IDs.length; i++)
+                    if (IDs[i] == d.getTurno()) {
+                        indexOfTurno = i;
+                        break;
                     }
-                }
-                else {
-                    for (int j = 0; j < schiene[IDs[i]-1].length; j++) {
-                        if (schiene[IDs[i]-1][j].isDiSchiena() != d.getSchiene()[IDs[i]-1][j]) {
-                            if (!schiene[IDs[i]-1][j].isDiSchiena()) {
-                                ImageView mazzo = this.mazzo.getImageView();
-                                ImageView cartaInMano = schiene[IDs[i]-1][j].getImageView();
-                                Platform.runLater(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        animator.pescaAltriGiocatori(mazzo, cartaInMano);
-                                    }
-                                });
+
+                ImageView[] IVCarteInTavola = new ImageView[carteInManoD.size()];
+                for(i = 0; i < IVCarteInTavola.length; i++)
+                    IVCarteInTavola[i] = this.carteInTavola.get(i).getImageView();
+
+                final int id = posGiocatori[indexOfTurno];
+
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        animator.prendiCarte(IVCarteInTavola, id);
+                    }
+                });
+
+                //assegnazione delle nuove carte in tavola alla view
+                i = 0;
+                for(CartaGrafica c : this.carteInTavola)
+                    c.setCarta(carteInTavolaD.get(i++));
+
+                //disposizione degli ID per ordine di pesca
+                IDs[0] = indexOfTurno;
+                for(i = 1; i < IDs.length; i ++)
+                    if (IDs[i-1] == IDs.length - 1)
+                        IDs[i] = 0;
+                    else
+                        IDs[i] = IDs[i-1] + 1;
+
+                for (i = 0; i < IDs.length; i++) {
+                    try {
+                        Thread.sleep(800);
+                    }catch (Exception e){}
+
+                    if(IDs[i] == 0) {
+                        int j = 0;
+                        for (CartaGrafica c : this.carteInMano) {
+                            if (c.getCarta() == null && carteInManoD.get(j) != null) {
+                                ImageView cartaInMano = this.carteInMano.get(j).getImageView();
+                                Carta nuovaCarta = carteInManoD.get(j);
+                                System.out.println(nuovaCarta);
+                                try {
+                                    Image imgNuovaCarta = new Image(new FileInputStream("src/carte/" + nuovaCarta.getSeme() + " " + nuovaCarta.getNumero() + ".png"));
+                                    Platform.runLater(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            animator.pescaCarta(mazzo.getImageView(), cartaInMano, imgNuovaCarta);
+                                        }
+                                    });
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                carteInMano.get(j).setCarta(carteInManoD.get(j));
+                            }
+                            j++;
+                        }
+                    }
+                    else {
+                        for (int j = 0; j < this.schiene[IDs[i]-1].length; j++) {
+                            if (this.schiene[IDs[i]-1][j].isDiSchiena() != d.getSchiene()[IDs[i]-1][j]) {
+                                if (!this.schiene[IDs[i]-1][j].isDiSchiena()) {
+                                    ImageView cartaInMano = this.schiene[IDs[i]-1][j].getImageView();
+                                    final int posGiocatore = posGiocatori[IDs[i]];
+                                    Platform.runLater(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            animator.pescaAltriGiocatori(mazzo.getImageView(), cartaInMano, posGiocatore);
+                                        }
+                                    });
+                                    schiene[IDs[i]-1][j].setSchiena(d.getSchiene()[IDs[i]-1][j]);
+                                }
                             }
                         }
                     }
@@ -184,8 +247,6 @@ public class View {
 
         if(d.getBriscola() == null)
             this.mazzo.setCarta(null);
-
-        precView = this;
     }
 
     public CartaGrafica getCarta(int indice) {

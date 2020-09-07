@@ -26,6 +26,6 @@ public class ClientMain extends Application {
     }
 
     public static void main(String[] args){
-        loadGame(args,3);
+        loadGame(args,4);
     }
 }
