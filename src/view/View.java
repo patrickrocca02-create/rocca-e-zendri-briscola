@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Ellipse;
 import model.Carta;
 import model.Disposizione;
 
@@ -18,13 +19,12 @@ public class View {
     private CartaGrafica[][] schiene;
     private CartaGrafica briscola;
     private CartaGrafica mazzo;
+    private Ellipse[] ellissiGiocatori;
 
-    private View precView;
     private Animator animator;
 
-    private int[] posGiocatori;
 
-    public View(Pane tavola, ImageView[] carteInTavola, ImageView briscola, ImageView[] carteInMano, ImageView[][] schiene, ImageView mazzo){
+    public View(Pane tavola, ImageView[] carteInTavola, ImageView briscola, ImageView[] carteInMano, ImageView[][] schiene, ImageView mazzo, Ellipse[] ellissiGiocatori){
         this.tavola = tavola;
 
         this.carteInMano = new ArrayList<CartaGrafica>();
@@ -49,24 +49,9 @@ public class View {
 
         this.mazzo = new CartaGrafica(mazzo);
 
-        this.animator = new Animator(this.tavola);
+        this.animator = new Animator(this.tavola, this.carteInTavola.size());
 
-        this.posGiocatori = new int[this.carteInTavola.size()];
-        posGiocatori[0] = 0;
-        switch (this.posGiocatori.length){
-            case 2:
-                posGiocatori[1] = 2;
-                break;
-            case 3:
-                posGiocatori[1] = 2;
-                posGiocatori[2] = 3;
-                break;
-            case 4:
-                posGiocatori[1] = 1;
-                posGiocatori[2] = 2;
-                posGiocatori[3] = 3;
-                break;
-        }
+        this.ellissiGiocatori = ellissiGiocatori;
     }
 
     public void aggiornaView(Disposizione d){
@@ -110,7 +95,7 @@ public class View {
                             ImageView schiena = this.schiene[i][j].getImageView();
                             ImageView cartaInTavola = this.carteInTavola.get(i + 1).getImageView();
                             Carta nuovaCarta = d.getCarteInTavola().get(i + 1);
-                            final int posGiocatore = posGiocatori[i + 1];
+                            final int posGiocatore = animator.getPosGiocatori(i + 1);
                             try {
                                 Image imgNuovaCarta = new Image(new FileInputStream("src/carte/" + nuovaCarta.getSeme() + " " + nuovaCarta.getNumero() + ".png"));
                                 Platform.runLater(new Runnable() {
@@ -135,29 +120,29 @@ public class View {
                     break;
                 }
 
+            int[] IDs = new int[this.schiene.length + 1];
+            //allineamento degli ID client con gli ID server
+            IDs[0] = d.getID();
+            for(i = 1; i < IDs.length; i ++)
+                if (IDs[i-1] == IDs.length - 1)
+                    IDs[i] = 0;
+                else
+                    IDs[i] = IDs[i-1] + 1;
+
+            //ID client del vincitore
+            int indexOfTurno = 0;
+            for(i = 0; i < IDs.length; i++)
+                if (IDs[i] == d.getTurno()) {
+                    indexOfTurno = i;
+                    break;
+                }
+
             if(pesca){
-                int[] IDs = new int[this.schiene.length + 1];
-                //allineamento degli ID client con gli ID server
-                IDs[0] = d.getID();
-                for(i = 1; i < IDs.length; i ++)
-                    if (IDs[i-1] == IDs.length - 1)
-                        IDs[i] = 0;
-                    else
-                        IDs[i] = IDs[i-1] + 1;
-
-                //ID client del vincitore
-                int indexOfTurno = 0;
-                for(i = 0; i < IDs.length; i++)
-                    if (IDs[i] == d.getTurno()) {
-                        indexOfTurno = i;
-                        break;
-                    }
-
-                ImageView[] IVCarteInTavola = new ImageView[carteInManoD.size()];
+                ImageView[] IVCarteInTavola = new ImageView[carteInTavolaD.size()];
                 for(i = 0; i < IVCarteInTavola.length; i++)
                     IVCarteInTavola[i] = this.carteInTavola.get(i).getImageView();
 
-                final int id = posGiocatori[indexOfTurno];
+                final int id = animator.getPosGiocatori(indexOfTurno);
 
                 Platform.runLater(new Runnable() {
                     @Override
@@ -190,13 +175,16 @@ public class View {
                             if (c.getCarta() == null && carteInManoD.get(j) != null) {
                                 ImageView cartaInMano = this.carteInMano.get(j).getImageView();
                                 Carta nuovaCarta = carteInManoD.get(j);
-                                System.out.println(nuovaCarta);
+                                final int idPesca = i;
                                 try {
                                     Image imgNuovaCarta = new Image(new FileInputStream("src/carte/" + nuovaCarta.getSeme() + " " + nuovaCarta.getNumero() + ".png"));
                                     Platform.runLater(new Runnable() {
                                         @Override
                                         public void run() {
-                                            animator.pescaCarta(mazzo.getImageView(), cartaInMano, imgNuovaCarta);
+                                            if(briscola != null && d.getBriscola() == null && idPesca == 3)
+                                                animator.pescaBriscola(briscola.getImageView(), cartaInMano);
+                                            else
+                                                animator.pescaCarta(mazzo.getImageView(), cartaInMano, imgNuovaCarta);
                                         }
                                     });
                                 } catch (Exception e) {
@@ -212,11 +200,15 @@ public class View {
                             if (this.schiene[IDs[i]-1][j].isDiSchiena() != d.getSchiene()[IDs[i]-1][j]) {
                                 if (!this.schiene[IDs[i]-1][j].isDiSchiena()) {
                                     ImageView cartaInMano = this.schiene[IDs[i]-1][j].getImageView();
-                                    final int posGiocatore = posGiocatori[IDs[i]];
+                                    final int posGiocatore = animator.getPosGiocatori(IDs[i]);
+                                    final int idPesca = i;
                                     Platform.runLater(new Runnable() {
                                         @Override
                                         public void run() {
-                                            animator.pescaAltriGiocatori(mazzo.getImageView(), cartaInMano, posGiocatore);
+                                            if(briscola != null && d.getBriscola() == null && idPesca == 3)
+                                                animator.pescaBriscolaAltriGiocatori(briscola.getImageView(), cartaInMano, posGiocatore);
+                                            else
+                                                animator.pescaAltriGiocatori(mazzo.getImageView(), cartaInMano, posGiocatore);
                                         }
                                     });
                                     schiene[IDs[i]-1][j].setSchiena(d.getSchiene()[IDs[i]-1][j]);
@@ -226,6 +218,7 @@ public class View {
                     }
                 }
             }
+            animator.cambiaTurno(indexOfTurno, ellissiGiocatori, pesca);
         }
 
         int i = 0;
@@ -234,8 +227,9 @@ public class View {
         }
 
         i = 0;
-        for(CartaGrafica c : this.carteInTavola)
+        for(CartaGrafica c : this.carteInTavola) {
             c.setCarta(carteInTavolaD.get(i++));
+        }
 
         for (i = 0; i < schiene.length; i++) {
             for (int j = 0; j < schiene[i].length; j++) {

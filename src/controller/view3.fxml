@@ -24,7 +24,7 @@
       <ImageView fx:id="schiena1" fitHeight="180.0" fitWidth="115.0" layoutX="532.0" layoutY="-60.0" pickOnBounds="true" preserveRatio="true" />
       <ImageView fx:id="schiena2" fitHeight="180.0" fitWidth="115.0" layoutX="382.0" layoutY="-60.0" pickOnBounds="true" preserveRatio="true" />
       <ImageView fx:id="schiena3" fitHeight="180.0" fitWidth="115.0" layoutX="232.0" layoutY="-60.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="schiena4" fitHeight="180.0" fitWidth="115.0" layoutX="-40.0" layoutY="225.0" pickOnBounds="true" preserveRatio="true" rotate="90.0" />
       <ImageView fx:id="schiena5" fitHeight="180.0" fitWidth="115.0" layoutX="-40.0" layoutY="360.0" pickOnBounds="true" preserveRatio="true" rotate="90.0" />
+      <ImageView fx:id="schiena4" fitHeight="180.0" fitWidth="115.0" layoutX="-40.0" layoutY="225.0" pickOnBounds="true" preserveRatio="true" rotate="90.0" />
    </children>
 </Pane>

@@ -6,6 +6,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Ellipse;
 import view.Animator;
 import view.View;
 
@@ -39,6 +40,11 @@ public class Controller {
     @FXML private ImageView schiena8 = null;
     @FXML private ImageView schiena9 = null;
 
+    @FXML private Ellipse ellisse1 = null;
+    @FXML private Ellipse ellisse2 = null;
+    @FXML private Ellipse ellisse3 = null;
+    @FXML private Ellipse ellisse4 = null;
+
     @FXML
     void initialize(){
         ImageView[] carteInMano = {carta1, carta2, carta3};
@@ -46,7 +52,6 @@ public class Controller {
         ImageView[] carteInTavolaTot = {cartaInTavola1, cartaInTavola2, cartaInTavola3,cartaInTavola4};
         int len = 0;
         for (ImageView carta : carteInTavolaTot) {
-            System.out.println(carta);
             if (carta != null)
                 len++;
         }
@@ -68,7 +73,18 @@ public class Controller {
             }
         }
 
-        view = new View(tavola, carteInTavola, briscola,carteInMano,schiene,mazzo);
+        Ellipse[] ellissiTot = {ellisse1, ellisse2, ellisse3,ellisse4};
+        len = 0;
+        for (Ellipse e : ellissiTot) {
+            if (e != null)
+                len++;
+        }
+        Ellipse[] ellissiGiocatori = new Ellipse[len];
+        for (int i = 0; i < len; i++)
+            ellissiGiocatori[i] = ellissiTot[i];
+
+
+        view = new View(tavola, carteInTavola, briscola,carteInMano,schiene,mazzo, ellissiGiocatori);
 
         try {
             giocatore = new Client(InetAddress.getLocalHost(), 2201, view);
