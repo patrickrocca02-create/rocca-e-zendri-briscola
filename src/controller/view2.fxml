@@ -10,8 +10,8 @@
 <Pane fx:id="tavola" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="600.0" styleClass="tavolo" stylesheets="@../css/stili.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.Controller">
    <children>
       <Rectangle arcHeight="60.0" arcWidth="60.0" fill="#a15c1359" height="300.0" layoutX="50.0" layoutY="250.0" smooth="false" stroke="#a15c1323" strokeType="INSIDE" width="500.0" />
-      <Ellipse fill="#a15c134f" layoutX="300.0" layoutY="800.0" radiusX="230.0" radiusY="130.0" stroke="#17a1134f" strokeType="INSIDE" />
-      <Ellipse fill="#a15c134f" layoutX="300.0" radiusX="230.0" radiusY="100.0" stroke="#a15c134f" strokeType="INSIDE" />
+      <Ellipse fx:id="ellisse1" fill="#a15c134f" layoutX="300.0" layoutY="800.0" radiusX="230.0" radiusY="130.0" stroke="#17a1134f" strokeType="INSIDE" />
+      <Ellipse fx:id="ellisse2" fill="#a15c134f" layoutX="300.0" radiusX="230.0" radiusY="100.0" stroke="#a15c134f" strokeType="INSIDE" />
       <ImageView fx:id="carta1" fitHeight="180.0" fitWidth="115.0" layoutX="112.5" layoutY="620.0" onMouseClicked="#onClickCarta1" pickOnBounds="true" preserveRatio="true" />
       <ImageView fx:id="carta2" fitHeight="180.0" fitWidth="115.0" layoutX="242.5" layoutY="620.0" onMouseClicked="#onClickCarta2" pickOnBounds="true" preserveRatio="true" />
       <ImageView fx:id="carta3" fitHeight="180.0" fitWidth="115.0" layoutX="372.5" layoutY="620.0" onMouseClicked="#onClickCarta3" pickOnBounds="true" preserveRatio="true" />

@@ -40,7 +40,10 @@ public class Partita4 extends Partita{
 
         if(giocata == 3){
 
+            int temp = turno;
+            turno = -1;
             server.broadcastDisposizione();
+            turno = temp;
 
             int[] indiciGiocatori = getIndiciGiocatoriTurno();
             int g1 = indiciGiocatori[0], g2= indiciGiocatori[1], g3= indiciGiocatori[2], g4 = indiciGiocatori[3];

@@ -2,10 +2,13 @@ package view;
 
 import javafx.animation.*;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 import javafx.geometry.Point3D;
+import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -15,6 +18,10 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 import java.io.FileInputStream;
+import java.io.SequenceInputStream;
+import java.security.spec.RSAOtherPrimeInfo;
+import java.time.temporal.Temporal;
+import java.util.Collections;
 
 public class Animator {
 
@@ -22,6 +29,11 @@ public class Animator {
 
     private Point2D[] DESTS_PRENDI = new Point2D[4];
     private int[] posGiocatori;
+
+    private final int TEMPO_DISTRIBUISCI = 500;
+    private final int TEMPO_PESCA = 500;
+    private final int TEMPO_PRENDI_CARTE = 500;
+    private final int TEMPO_SCOPRI = 400;
 
     public Animator(Pane tavola, int nGiocatori){
         this.tavola = tavola;
@@ -49,23 +61,13 @@ public class Animator {
         }
     }
     
-    public void inizioPartita(ImageView carta, ImageView[] carteInMano, ImageView[][] schiene, ImageView briscola){
-        briscola.setVisible(false);
 
-        for (int i = 0; i < 3; i++) {
-            pescaCarta(carta, carteInMano[i], carteInMano[i].getImage());
-            for (int j = 0; j < schiene.length; j++) {
-                pescaAltriGiocatori(carta, schiene[j][i], posGiocatori[j+1]);
-            }
-        }
-        scopriESpostaFrontale(carta, briscola, carta.getImage(), 1000);
-    }
 
     public void pescaBriscola(ImageView briscola, ImageView cartaInMano){
         briscola.setVisible(false);
         cartaInMano.setVisible(false);
 
-        sposta(briscola, cartaInMano, 750, 90, 0);
+        sposta(briscola, cartaInMano, TEMPO_DISTRIBUISCI, 90, 0);
     }
 
     public void pescaBriscolaAltriGiocatori(ImageView briscola, ImageView schiena, int id){
@@ -81,10 +83,10 @@ public class Animator {
 
         switch(id){
             case 1: case 3:
-                scopriESpostaFrontale(briscola, schiena, imgSchiena, 1000);
+                scopriESpostaFrontale(briscola, schiena, imgSchiena, TEMPO_PESCA);
                 break;
             case 2:
-                scopriESpostaLaterale(briscola, schiena, imgSchiena, 1000);
+                scopriESpostaLaterale(briscola, schiena, imgSchiena, TEMPO_PESCA);
                 break;
         }
     }
@@ -102,10 +104,10 @@ public class Animator {
 
         switch (id) {
             case 2:
-                scopriESpostaFrontale(carta, cartaInTavola, imgNuovaCarta, 750);
+                scopriESpostaFrontale(carta, cartaInTavola, imgNuovaCarta, TEMPO_DISTRIBUISCI);
                 break;
             case 1: case 3:
-                scopriESpostaLaterale(carta, cartaInTavola, imgNuovaCarta, 750);
+                scopriESpostaLaterale(carta, cartaInTavola, imgNuovaCarta, TEMPO_DISTRIBUISCI);
                 break;
         }
     }
@@ -116,14 +118,14 @@ public class Animator {
             ImageView dest = new ImageView();
             dest.setLayoutX(DESTS_PRENDI[id].getX());
             dest.setLayoutY(DESTS_PRENDI[id].getY());
-            sposta(c, dest, 750,0,0);
+            sposta(c, dest, TEMPO_PRENDI_CARTE,0,0);
         }
     }
 
     public void pescaCarta(ImageView mazzo, ImageView cartaInMano, Image imgNuovaCarta){
         cartaInMano.setVisible(false);
 
-        scopriESpostaFrontale(mazzo,  cartaInMano, imgNuovaCarta, 1000);
+        scopriESpostaFrontale(mazzo,  cartaInMano, imgNuovaCarta, TEMPO_PESCA);
     }
 
     public void pescaAltriGiocatori(ImageView mazzo, ImageView destinazione, int id){
@@ -131,13 +133,13 @@ public class Animator {
 
         switch(id){
             case 1:
-                sposta(mazzo, destinazione, 750, 0, 90);
+                sposta(mazzo, destinazione, TEMPO_PESCA, 0, 90);
                 break;
             case 2:
-                sposta(mazzo, destinazione, 750, 0, 0);
+                sposta(mazzo, destinazione, TEMPO_PESCA, 0, 0);
                 break;
             case 3:
-                sposta(mazzo, destinazione, 750, 0, -90);
+                sposta(mazzo, destinazione, TEMPO_PESCA, 0, -90);
                 break;
         }
     }
@@ -180,48 +182,41 @@ public class Animator {
         ImageView copia = copyImageView(carta);
 
         SequentialTransition sequentialTransition = new SequentialTransition();
-        ParallelTransition parallelTransition1 = new ParallelTransition(copia);
 
-        TranslateTransition translateTransition1 = new TranslateTransition(Duration.millis(durata/2), copia);
-        translateTransition1.setFromX(0);
-        translateTransition1.setFromY(0);
+        TranslateTransition translateTransition = new TranslateTransition(Duration.millis(durata/2), copia);
+        translateTransition.setFromX(0);
+        translateTransition.setFromY(0);
         double x = destinazione.getLayoutX() - copia.getLayoutX();
         double y = destinazione.getLayoutY() - copia.getLayoutY();
-        translateTransition1.setToX(x/2);
-        translateTransition1.setToY(y/2);
+        translateTransition.setToX(x);
+        translateTransition.setToY(y);
 
-        RotateTransition rotateTransition1 = new RotateTransition(Duration.millis(durata/2), copia);
-        rotateTransition1.setAxis(new Point3D(0,1,0));
-        rotateTransition1.setFromAngle(180);
-        rotateTransition1.setToAngle(90);
+        RotateTransition rotateTransition = new RotateTransition(Duration.millis(durata - TEMPO_SCOPRI), copia);
 
-        parallelTransition1.getChildren().addAll(translateTransition1, rotateTransition1);
+        RotateTransition scopri1 = new RotateTransition(Duration.millis(TEMPO_SCOPRI/2), copia);
+        scopri1.setAxis(Rotate.Y_AXIS);
+        scopri1.setFromAngle(180);
+        scopri1.setToAngle(90);
 
-        parallelTransition1.setOnFinished(new EventHandler<ActionEvent>() {
+        scopri1.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(final ActionEvent actionEvent) {
                 copia.setImage(imgNuovaCarta);
             }
         });
 
-        ParallelTransition parallelTransition2 = new ParallelTransition(copia);
+        ParallelTransition parallelTransition = new ParallelTransition(copia);
 
-        TranslateTransition translateTransition2 = new TranslateTransition(Duration.millis(durata/2), copia);
-        translateTransition2.setFromX(x/2);
-        translateTransition2.setFromY(y/2);
-        translateTransition2.setToX(x);
-        translateTransition2.setToY(y);
+        RotateTransition scopri2 = new RotateTransition(Duration.millis(TEMPO_SCOPRI/2), copia);
+        scopri2.setAxis(Rotate.Y_AXIS);
+        scopri2.setFromAngle(90);
+        scopri2.setToAngle(0);
 
-        RotateTransition rotateTransition2 = new RotateTransition(Duration.millis(durata/2), copia);
-        rotateTransition2.setFromAngle(90);
-        rotateTransition2.setToAngle(0);
-        rotateTransition2.setAxis(new Point3D(0,1,0));
+        sequentialTransition.getChildren().addAll(rotateTransition, scopri1, scopri2);
 
-        parallelTransition2.getChildren().addAll(translateTransition2, rotateTransition2);
+        parallelTransition.getChildren().addAll(translateTransition, sequentialTransition);
 
-        sequentialTransition.getChildren().addAll(parallelTransition1, parallelTransition2);
-
-        sequentialTransition.setOnFinished(new EventHandler<ActionEvent>() {
+        parallelTransition.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(final ActionEvent actionEvent) {
                 carta.setVisible(true);
@@ -230,8 +225,8 @@ public class Animator {
             }
         });
 
-        sequentialTransition.setCycleCount(1);
-        sequentialTransition.play();
+        parallelTransition.setCycleCount(1);
+        parallelTransition.play();
     }
 
     private void scopriESpostaLaterale(ImageView carta, ImageView destinazione, Image imgNuovaCarta, int durata){
@@ -248,12 +243,12 @@ public class Animator {
         translateTransition1.setToX(x);
         translateTransition1.setToY(y);
 
-        RotateTransition rotateTransition1 = new RotateTransition(Duration.millis(durata*6/10), copia);
+        RotateTransition rotateTransition1 = new RotateTransition(Duration.millis(durata - TEMPO_SCOPRI), copia);
         rotateTransition1.setAxis(Rotate.Z_AXIS);
         rotateTransition1.setFromAngle(90);
         rotateTransition1.setToAngle(0);
 
-        RotateTransition rotateTransition2 = new RotateTransition(Duration.millis(durata*2/10), copia);
+        RotateTransition rotateTransition2 = new RotateTransition(Duration.millis(TEMPO_SCOPRI), copia);
         rotateTransition2.setAxis(Rotate.Y_AXIS);
         rotateTransition2.setFromAngle(180);
         rotateTransition2.setToAngle(270);
@@ -265,7 +260,7 @@ public class Animator {
             }
         });
 
-        RotateTransition rotateTransition3 = new RotateTransition(Duration.millis(durata*2/10), copia);
+        RotateTransition rotateTransition3 = new RotateTransition(Duration.millis(TEMPO_SCOPRI), copia);
         rotateTransition3.setFromAngle(270);
         rotateTransition3.setToAngle(360);
         rotateTransition3.setAxis(Rotate.Y_AXIS);
@@ -286,16 +281,77 @@ public class Animator {
         parallelTransition.play();
     }
 
-    public void cambiaTurno(int idTurno, Ellipse[] e, boolean fineTurno){
-        int attesa = 750;
-        if(fineTurno)
-            attesa = e.length*1000 + 750;
+    public void scopriBriscola(ImageView mazzo, ImageView briscola, Image imgBriscola, int durata){
+        briscola.setVisible(false);
+        ImageView copia = copyImageView(mazzo);
+
+        SequentialTransition sequentialTranslate = new SequentialTransition();
+        SequentialTransition sequentialRotate = new SequentialTransition();
+        ParallelTransition parallelTransition = new ParallelTransition();
+
+        TranslateTransition translateTransition1 = new TranslateTransition(Duration.millis(durata/2), copia);
+        translateTransition1.setFromX(0);
+        translateTransition1.setFromY(0);
+        translateTransition1.setToX(-200);
+        translateTransition1.setToY(0);
+
+        TranslateTransition translateTransition2 = new TranslateTransition(Duration.millis(durata/2), copia);
+        translateTransition2.setFromX(-200);
+        translateTransition2.setFromY(0);
+        translateTransition2.setToX(-40);
+        translateTransition2.setToY(0);
+
+        sequentialTranslate.getChildren().addAll(translateTransition1, translateTransition2);
+
+        RotateTransition scopri1 = new RotateTransition(Duration.millis(durata*2/10), copia);
+        scopri1.setAxis(Rotate.Y_AXIS);
+        scopri1.setFromAngle(180);
+        scopri1.setToAngle(270);
+
+        scopri1.setOnFinished(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(final ActionEvent actionEvent) {
+                copia.setImage(imgBriscola);
+
+                ObservableList<Node> workingCollection = FXCollections.observableArrayList(tavola.getChildren());
+                Collections.swap(workingCollection, tavola.getChildren().indexOf(copia), tavola.getChildren().indexOf(mazzo));
+                tavola.getChildren().setAll(workingCollection);
+            }
+        });
+
+        RotateTransition scopri2 = new RotateTransition(Duration.millis(durata*2/10), copia);
+        scopri2.setFromAngle(270);
+        scopri2.setToAngle(360);
+        scopri2.setAxis(Rotate.Y_AXIS);
+
+        RotateTransition rotateTransition1 = new RotateTransition(Duration.millis(durata*6/10), copia);
+        rotateTransition1.setAxis(Rotate.Z_AXIS);
+        rotateTransition1.setFromAngle(0);
+        rotateTransition1.setToAngle(-90);
+
+        sequentialRotate.getChildren().addAll(scopri1, scopri2, rotateTransition1);
+        parallelTransition.getChildren().addAll(sequentialTranslate, sequentialRotate);
+
+        parallelTransition.setOnFinished(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(final ActionEvent actionEvent) {
+                briscola.setVisible(true);
+                tavola.getChildren().remove(copia);
+            }
+        });
+
+        parallelTransition.setCycleCount(1);
+        parallelTransition.play();
+    }
+
+    public void cambiaTurno(int idTurno, Ellipse[] e){
+        int attesa = TEMPO_PESCA;
 
         for(int i = 0; i < e.length; i++){
             if (i == idTurno)
-                new Timeline(new KeyFrame(Duration.millis(attesa)),new KeyFrame(Duration.millis(10), new KeyValue(e[i].strokeProperty(), Color.LIGHTGREEN))).play();
+                new SequentialTransition(new StrokeTransition(Duration.millis(attesa), e[i]),new StrokeTransition(Duration.millis(10), e[i], (Color) e[i].getStroke(), Color.LIGHTGREEN)).play();
             else
-                new Timeline(new KeyFrame(Duration.millis(attesa)), new KeyFrame(Duration.millis(10), new KeyValue(e[i].strokeProperty(), Color.SANDYBROWN))).play();
+                new SequentialTransition(new StrokeTransition(Duration.millis(attesa), e[i]),new StrokeTransition(Duration.millis(10), e[i], (Color) e[i].getStroke(), Color.BROWN)).play();
         }
     }
 

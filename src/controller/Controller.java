@@ -1,13 +1,11 @@
 package controller;
 
-
 import javafx.fxml.FXML;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
-import view.Animator;
 import view.View;
 
 import java.net.InetAddress;
@@ -96,7 +94,7 @@ public class Controller {
 
     @FXML
     void onClickCarta1(MouseEvent event) {
-        if(giocatore.isTurno() && view.getCarta(0).getCarta() != null) {
+        if(giocatore.isTurno() && view.getCarta(0).getCarta() != null && (Color) ellisse1.getStroke() == Color.LIGHTGREEN) {
             giocatore.setTurno(false);
             giocatore.inviaCarta(0);
         }
@@ -104,7 +102,7 @@ public class Controller {
 
     @FXML
     void onClickCarta2(MouseEvent event) {
-        if(giocatore.isTurno() && view.getCarta(1).getCarta() != null) {
+        if(giocatore.isTurno() && view.getCarta(1).getCarta() != null && (Color) ellisse1.getStroke() == Color.LIGHTGREEN) {
             giocatore.setTurno(false);
             giocatore.inviaCarta(1);
         }
@@ -112,7 +110,7 @@ public class Controller {
 
     @FXML
     void onClickCarta3(MouseEvent event) {
-        if(giocatore.isTurno() && view.getCarta(2).getCarta() != null) {
+        if(giocatore.isTurno() && view.getCarta(2).getCarta() != null && (Color) ellisse1.getStroke() == Color.LIGHTGREEN) {
             giocatore.setTurno(false);
             giocatore.inviaCarta(2);
         }

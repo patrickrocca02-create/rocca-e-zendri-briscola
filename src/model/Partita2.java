@@ -51,7 +51,10 @@ public class Partita2 extends Partita{
 
          if(giocata == 1){
 
+             int temp= turno;
+             turno = -1;
              server.broadcastDisposizione();
+             turno = temp;
 
              int g1,g2;
 
