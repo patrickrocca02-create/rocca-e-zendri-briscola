@@ -40,6 +40,12 @@ public class Carta implements Serializable {
     }
 
     public String toString(){
-        return "Seme: " +  this.seme + ", Numero: " + this.numero;
+        String strSeme = "spade";
+        switch (seme){
+            case 2: strSeme= "coppe"; break;
+            case 3: strSeme= "denari"; break;
+            case 4: strSeme= "bastoni"; break;
+        }
+        return "Seme: " +  strSeme + ", Numero: " + this.numero;
     }
 }

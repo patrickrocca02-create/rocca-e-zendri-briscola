@@ -16,9 +16,7 @@ public class Client extends Thread{
     private ObjectInputStream in;
     private boolean turno;
 
-    public Client(InetAddress ipServer, int porta, View view){
-        this.view = view;
-
+    public Client(InetAddress ipServer, int porta){
         Socket client = null;
         try{
             client = new Socket(ipServer,porta);
@@ -33,19 +31,14 @@ public class Client extends Thread{
 
     public void inviaCarta(int indice){
         try{
-            System.out.println("Inviata la carta: " + view.getCarta(indice).getCarta());
+            //System.out.println("Inviata la carta: " + view.getCarta(indice).getCarta());
             out.writeObject(view.getCarta(indice).getCarta());
             out.flush();
         }catch (Exception e) { e.printStackTrace(); }
     }
 
-    private void finePartita(int esito) {
-        if(esito == 0)
-            System.out.println("VINTO");
-        else if (esito == 1)
-            System.out.println("PERSO");
-        else
-            System.out.println("PAREGGIO");
+    private void finePartita(int[] esito) {
+        view.finePartita(esito[0], esito[1]);
     }
 
     public boolean isTurno(){
@@ -66,12 +59,17 @@ public class Client extends Thread{
             if (inObj instanceof Disposizione) {
                 Disposizione d = (Disposizione) inObj;
                 this.turno = d.getTurno() == d.getID();
+                while(view == null)
+                    System.out.print("");
                 view.aggiornaView(d);
                 try {
                     Thread.sleep(1000);
                 }catch (Exception e){}
-            } else {
-                finePartita((int) (Integer) inObj);
+            } else if (inObj instanceof Integer){
+                ApplicationMain.nGiocatori = (int) (Integer) inObj;
+            }
+            else{
+                finePartita((int[]) inObj);
                 fine = true;
             }
         }
@@ -79,5 +77,9 @@ public class Client extends Thread{
 
     public void setTurno(boolean turno) {
         this.turno = turno;
+    }
+
+    public void setView(View view){
+        this.view = view;
     }
 }

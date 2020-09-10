@@ -7,21 +7,36 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class ApplicationMain extends Application {
-    static int nGiocatori;
+import java.net.InetAddress;
 
-    @Override
-    public void start(Stage primaryStage) throws Exception{
-        String fileName = "view" + nGiocatori + ".fxml";
-        Parent root = FXMLLoader.load(getClass().getResource(fileName));
-        primaryStage.setTitle("Briscola");
-        primaryStage.setScene(new Scene(root));
-        primaryStage.setOnCloseRequest((e) -> {Platform.exit();System.exit(0);});
-        primaryStage.show();
+public class ApplicationMain{
+    public static int nGiocatori = 0;
+    public static int porta;
+    public static InetAddress indirizzo;
+    public static Client client;
+
+    public void start(){
+        try {
+            Stage partita = new Stage();
+            String fileName = "view" + nGiocatori + ".fxml";
+            Parent root = FXMLLoader.load(getClass().getResource(fileName));
+            partita.setTitle("Briscola");
+            partita.setScene(new Scene(root));
+            partita.show();
+        }catch (Exception e){e.printStackTrace();}
     }
 
-    public static void loadGame(String[] args,int nGiocatori) {
-        ApplicationMain.nGiocatori = nGiocatori;
-        launch(args);
+    public static void loadGame(String[] args, int porta, InetAddress ipLocale) {
+        ApplicationMain.porta = porta;
+        ApplicationMain.indirizzo = ipLocale;
+
+        client = new Client(ApplicationMain.indirizzo, ApplicationMain.porta);
+        client.start();
+
+        while(nGiocatori == 0)
+            System.out.print("");
+        System.out.println(porta);
+
+        new ApplicationMain().start();
     }
 }

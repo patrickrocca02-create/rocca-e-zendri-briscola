@@ -144,27 +144,32 @@ public class Partita4 extends Partita{
         return indiciGiocatori;
     }
 
-    public int[] getVincitori(){
-        int[] vincitori = new int[4];
+    public int[][] getVincitori(){
+        int[][] vincitori = new int[4][2];
 
         if(giocatori.get(0).getPunti() + giocatori.get(2).getPunti() > 60) {
-            vincitori[0] = 0;
-            vincitori[1] = 1;
-            vincitori[2] = 0;
-            vincitori[3] = 1;
+            vincitori[0][0] = 0;
+            vincitori[1][0] = 1;
+            vincitori[2][0] = 0;
+            vincitori[3][0] = 1;
         }
         else if(giocatori.get(1).getPunti() + giocatori.get(3).getPunti() > 60){
-            vincitori[0] = 1;
-            vincitori[1] = 0;
-            vincitori[2] = 1;
-            vincitori[3] = 0;
+            vincitori[0][0] = 1;
+            vincitori[1][0] = 0;
+            vincitori[2][0] = 1;
+            vincitori[3][0] = 0;
         }
         else{
-            vincitori[0] = 2;
-            vincitori[1] = 2;
-            vincitori[2] = 2;
-            vincitori[3] = 2;
+            vincitori[0][0] = 2;
+            vincitori[1][0] = 2;
+            vincitori[2][0] = 2;
+            vincitori[3][0] = 2;
         }
+
+        vincitori[0][1] = giocatori.get(0).getPunti() + giocatori.get(2).getPunti();
+        vincitori[1][1] = giocatori.get(1).getPunti() + giocatori.get(3).getPunti();
+        vincitori[2][1] = giocatori.get(2).getPunti() + giocatori.get(0).getPunti();
+        vincitori[3][1] = giocatori.get(3).getPunti() + giocatori.get(1).getPunti();
 
         return vincitori;
     }

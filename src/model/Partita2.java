@@ -105,21 +105,24 @@ public class Partita2 extends Partita{
      }
 
     @Override
-    public int[] getVincitori(){
-         int[] vincitori = new int[2];
+    public int[][] getVincitori(){
+         int[][] vincitori = new int[2][2];
 
          if(giocatori.get(0).getPunti() > 60) {
-             vincitori[0] = 0;
-             vincitori[1] = 1;
+             vincitori[0][0] = 0;
+             vincitori[1][0] = 1;
          }
          else if(giocatori.get(1).getPunti() > 60){
-             vincitori[0] = 1;
-             vincitori[1] = 0;
+             vincitori[0][0] = 1;
+             vincitori[1][0] = 0;
          }
          else{
-             vincitori[0] = 2;
-             vincitori[1] = 2;
+             vincitori[0][0] = 2;
+             vincitori[1][0] = 2;
          }
+
+         vincitori[0][1] = giocatori.get(0).getPunti();
+         vincitori[1][1] = giocatori.get(1).getPunti();
 
          return vincitori;
      }

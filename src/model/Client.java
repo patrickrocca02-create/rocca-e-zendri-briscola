@@ -25,6 +25,12 @@ public class Client {
             out.flush();
         } catch (Exception e) { e.printStackTrace(); }
     }
+    public void inviaNGiocatori(int nGiocatori){
+        try {
+            out.writeObject((Integer) nGiocatori);
+            out.flush();
+        } catch (Exception e) { e.printStackTrace(); }
+    }
     public Carta ascolta(){
         try {
             return (Carta) in.readObject();
@@ -33,9 +39,9 @@ public class Client {
     }
 
     //invia: 0 se ha vinto, 1 se ha perso, 2 se ha pareeggiato
-    public void finePartita(int esito){
+    public void finePartita(int[] esito){
         try {
-            out.writeObject((Integer) esito);
+            out.writeObject(esito);
             out.flush();
         } catch (Exception e) {}
         try {

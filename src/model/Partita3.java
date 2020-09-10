@@ -132,46 +132,50 @@ public class Partita3 extends Partita{
         return indiciGiocatori;
     }
 
-    public int[] getVincitori(){
-        int[] vincitori = new int[3];
+    public int[][] getVincitori(){
+        int[][] vincitori = new int[3][2];
 
         int p1 = giocatori.get(0).getPunti(), p2 = giocatori.get(1).getPunti(), p3 = giocatori.get(2).getPunti();
 
         if(p1 > p2 && p1 > p3) {
-            vincitori[0] = 0;
-            vincitori[1] = 1;
-            vincitori[2] = 1;
+            vincitori[0][0] = 0;
+            vincitori[1][0] = 1;
+            vincitori[2][0] = 1;
         }
         else if(p2 > p1 && p2 > p3){
-            vincitori[0] = 1;
-            vincitori[1] = 0;
-            vincitori[2] = 1;
+            vincitori[0][0] = 1;
+            vincitori[1][0] = 0;
+            vincitori[2][0] = 1;
         }
         else if(p3 > p1 && p3 > p2) {
-            vincitori[0] = 1;
-            vincitori[1] = 1;
-            vincitori[2] = 0;
+            vincitori[0][0] = 1;
+            vincitori[1][0] = 1;
+            vincitori[2][0] = 0;
         }
         else if(p1 == p2 && p3 < p1){
-            vincitori[0] = 2;
-            vincitori[1] = 2;
-            vincitori[2] = 1;
+            vincitori[0][0] = 2;
+            vincitori[1][0] = 2;
+            vincitori[2][0] = 1;
         }
         else if(p1 == p3 && p2 < p1){
-            vincitori[0] = 2;
-            vincitori[1] = 1;
-            vincitori[2] = 2;
+            vincitori[0][0] = 2;
+            vincitori[1][0] = 1;
+            vincitori[2][0] = 2;
         }
         else if(p2 == p3 && p1 < p2){
-            vincitori[0] = 1;
-            vincitori[1] = 2;
-            vincitori[2] = 2;
+            vincitori[0][0] = 1;
+            vincitori[1][0] = 2;
+            vincitori[2][0] = 2;
         }
         else{
-            vincitori[0] = 2;
-            vincitori[1] = 2;
-            vincitori[2] = 2;
+            vincitori[0][0] = 2;
+            vincitori[1][0] = 2;
+            vincitori[2][0] = 2;
         }
+
+        vincitori[0][1] = giocatori.get(0).getPunti();
+        vincitori[1][1] = giocatori.get(1).getPunti();
+        vincitori[2][1] = giocatori.get(2).getPunti();
 
         return vincitori;
     }

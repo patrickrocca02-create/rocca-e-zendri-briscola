@@ -1,11 +1,17 @@
 package model;
 
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 
 public class Server {
     private ArrayList<Client> clients;
     private Partita partita;
+
+    private ServerSocket ss;
+
+    public static final int MIN_PORTA = 49152;
+    public static final int MAX_PORTA = 65535;
 
     public Server(int nGiocatori){
         switch (nGiocatori) {
@@ -22,19 +28,19 @@ public class Server {
 
         partita.setServer(this);
         clients = new ArrayList<Client>();
+
+        try {
+            ss = new ServerSocket((int) (Math.random() * (MAX_PORTA - MIN_PORTA)) + MIN_PORTA);
+        } catch(Exception e) {}
     }
 
     public void start(){
-        ServerSocket ss = null;
-        try {
-            ss = new ServerSocket(2201);
-        } catch(Exception e) {}
-
         for (int i = 0; i < partita.getNGiocatori(); i++) {
             try {
                 System.out.println("In attesa del giocatore " + i + "...");
                 clients.add(new Client(ss.accept(),i));
                 System.out.println("Giocatore " + i + " connesso");
+                clients.get(i).inviaNGiocatori(partita.getNGiocatori());
             } catch(Exception e) {}
         }
 
@@ -56,9 +62,10 @@ public class Server {
         }
 
         int i = 0;
-        int[] esiti = partita.getVincitori();
+        int[][] esiti = partita.getVincitori();
         for(Client c : clients){
-            c.finePartita(esiti[i++]);
+            int[] esito = {esiti[i][0], esiti[i++][1]};
+            c.finePartita(esito);
         }
 
         try{
@@ -91,5 +98,13 @@ public class Server {
             Disposizione d = new Disposizione(i, carteInMano, carteInTavola, briscola, turno,schiene);
             clients.get(i++).inviaDisposizione(d);
         }
+    }
+
+    public int getPorta(){
+        return this.ss.getLocalPort();
+    }
+
+    public InetAddress getIpv4(){
+        return this.ss.getInetAddress();
     }
 }

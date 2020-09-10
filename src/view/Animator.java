@@ -14,6 +14,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
+import javafx.scene.text.Text;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
@@ -34,6 +35,9 @@ public class Animator {
     private final int TEMPO_PESCA = 500;
     private final int TEMPO_PRENDI_CARTE = 500;
     private final int TEMPO_SCOPRI = 400;
+    private final int TEMPO_SCOPRI_BRISCOLA = 1750;
+    public final int DELAY_PESCA = 500;
+    private final int FADE_OUT_SCHERMATA_INIZIALE = 250;
 
     public Animator(Pane tavola, int nGiocatori){
         this.tavola = tavola;
@@ -67,7 +71,7 @@ public class Animator {
         briscola.setVisible(false);
         cartaInMano.setVisible(false);
 
-        sposta(briscola, cartaInMano, TEMPO_DISTRIBUISCI, 90, 0);
+        sposta(briscola, cartaInMano, TEMPO_DISTRIBUISCI, -90, 0);
     }
 
     public void pescaBriscolaAltriGiocatori(ImageView briscola, ImageView schiena, int id){
@@ -95,7 +99,7 @@ public class Animator {
         carta.setVisible(false);
         cartaInTavola.setVisible(false);
 
-        sposta(carta, cartaInTavola, 750, 0, 0);
+        sposta(carta, cartaInTavola, TEMPO_DISTRIBUISCI, 0, 0);
     }
 
     public void mettiInTavolaAltriGiocatori(ImageView carta, ImageView cartaInTavola, Image imgNuovaCarta, int id){
@@ -183,7 +187,7 @@ public class Animator {
 
         SequentialTransition sequentialTransition = new SequentialTransition();
 
-        TranslateTransition translateTransition = new TranslateTransition(Duration.millis(durata/2), copia);
+        TranslateTransition translateTransition = new TranslateTransition(Duration.millis(durata), copia);
         translateTransition.setFromX(0);
         translateTransition.setFromY(0);
         double x = destinazione.getLayoutX() - copia.getLayoutX();
@@ -235,7 +239,7 @@ public class Animator {
         SequentialTransition sequentialTransition = new SequentialTransition();
         ParallelTransition parallelTransition = new ParallelTransition();
 
-        TranslateTransition translateTransition1 = new TranslateTransition(Duration.millis(durata/2), copia);
+        TranslateTransition translateTransition1 = new TranslateTransition(Duration.millis(durata), copia);
         translateTransition1.setFromX(0);
         translateTransition1.setFromY(0);
         double x = destinazione.getLayoutX() - copia.getLayoutX();
@@ -281,7 +285,7 @@ public class Animator {
         parallelTransition.play();
     }
 
-    public void scopriBriscola(ImageView mazzo, ImageView briscola, Image imgBriscola, int durata){
+    public void scopriBriscola(ImageView mazzo, ImageView briscola, Image imgBriscola){
         briscola.setVisible(false);
         ImageView copia = copyImageView(mazzo);
 
@@ -289,21 +293,19 @@ public class Animator {
         SequentialTransition sequentialRotate = new SequentialTransition();
         ParallelTransition parallelTransition = new ParallelTransition();
 
-        TranslateTransition translateTransition1 = new TranslateTransition(Duration.millis(durata/2), copia);
+        TranslateTransition translateTransition1 = new TranslateTransition(Duration.millis(TEMPO_SCOPRI_BRISCOLA/2), copia);
         translateTransition1.setFromX(0);
-        translateTransition1.setFromY(0);
         translateTransition1.setToX(-200);
-        translateTransition1.setToY(0);
 
-        TranslateTransition translateTransition2 = new TranslateTransition(Duration.millis(durata/2), copia);
+        TranslateTransition translateTransition2 = new TranslateTransition(Duration.millis(TEMPO_SCOPRI_BRISCOLA/2), copia);
         translateTransition2.setFromX(-200);
         translateTransition2.setFromY(0);
-        translateTransition2.setToX(-40);
-        translateTransition2.setToY(0);
+        translateTransition2.setToX(briscola.getLayoutX() - copia.getLayoutX());
+        translateTransition2.setToY(briscola.getLayoutY() - copia.getLayoutY());
 
         sequentialTranslate.getChildren().addAll(translateTransition1, translateTransition2);
 
-        RotateTransition scopri1 = new RotateTransition(Duration.millis(durata*2/10), copia);
+        RotateTransition scopri1 = new RotateTransition(Duration.millis(TEMPO_SCOPRI_BRISCOLA*2/10), copia);
         scopri1.setAxis(Rotate.Y_AXIS);
         scopri1.setFromAngle(180);
         scopri1.setToAngle(270);
@@ -319,12 +321,12 @@ public class Animator {
             }
         });
 
-        RotateTransition scopri2 = new RotateTransition(Duration.millis(durata*2/10), copia);
+        RotateTransition scopri2 = new RotateTransition(Duration.millis(TEMPO_SCOPRI_BRISCOLA*2/10), copia);
         scopri2.setFromAngle(270);
         scopri2.setToAngle(360);
         scopri2.setAxis(Rotate.Y_AXIS);
 
-        RotateTransition rotateTransition1 = new RotateTransition(Duration.millis(durata*6/10), copia);
+        RotateTransition rotateTransition1 = new RotateTransition(Duration.millis(TEMPO_SCOPRI_BRISCOLA*6/10), copia);
         rotateTransition1.setAxis(Rotate.Z_AXIS);
         rotateTransition1.setFromAngle(0);
         rotateTransition1.setToAngle(-90);
@@ -351,8 +353,32 @@ public class Animator {
             if (i == idTurno)
                 new SequentialTransition(new StrokeTransition(Duration.millis(attesa), e[i]),new StrokeTransition(Duration.millis(10), e[i], (Color) e[i].getStroke(), Color.LIGHTGREEN)).play();
             else
-                new SequentialTransition(new StrokeTransition(Duration.millis(attesa), e[i]),new StrokeTransition(Duration.millis(10), e[i], (Color) e[i].getStroke(), Color.BROWN)).play();
+                new SequentialTransition(new StrokeTransition(Duration.millis(attesa), e[i]),new StrokeTransition(Duration.millis(10), e[i], (Color) e[i].getStroke(), Color.rgb(161, 92, 19))).play();
         }
+    }
+
+    public void rimuoviSchermataIniziale(Pane schermataIniziale){
+        FadeTransition fadeTransition = new FadeTransition(Duration.millis(FADE_OUT_SCHERMATA_INIZIALE), schermataIniziale);
+        fadeTransition.setFromValue(1);
+        fadeTransition.setToValue(0);
+
+        fadeTransition.setOnFinished(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(final ActionEvent actionEvent) {
+                tavola.getChildren().remove(schermataIniziale);
+            }
+        });
+
+        fadeTransition.play();
+    }
+
+    public void schermataFinale(Pane schermata, Text testoPunti, int punti){
+        testoPunti.setText("Punti: " + punti);
+        FadeTransition fadeTransition = new FadeTransition(Duration.millis(FADE_OUT_SCHERMATA_INIZIALE), schermata);
+        fadeTransition.setFromValue(0);
+        fadeTransition.setToValue(1);
+
+        fadeTransition.play();
     }
 
     private ImageView copyImageView(ImageView iv){

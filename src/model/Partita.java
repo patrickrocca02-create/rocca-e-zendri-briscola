@@ -86,11 +86,11 @@ public abstract class Partita {
         }
     }
     protected void pescaCarte(){
-        for(Giocatore g : giocatori) {
+        for(int i : getIndiciGiocatoriSuccessivi(turno)) {
             if(mazzo.size() > 0) {
-                g.aggiungiCarta(prossimaCarta());
+                giocatori.get(i).aggiungiCarta(prossimaCarta());
             }else if(!mazzoFinito) {
-                g.aggiungiCarta(briscola);
+                giocatori.get(i).aggiungiCarta(briscola);
                 mazzoFinito = true;
             }
         }
@@ -117,5 +117,5 @@ public abstract class Partita {
     public abstract int[] getIndiciGiocatoriTurno();
     public abstract int[] getIndiciGiocatoriSuccessivi(int giocatore);
     public abstract void processaMossa(Carta c);
-    public abstract int[] getVincitori();
+    public abstract int[][] getVincitori();
 }

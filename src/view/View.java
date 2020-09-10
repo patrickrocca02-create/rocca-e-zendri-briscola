@@ -5,6 +5,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Ellipse;
+import javafx.scene.text.Text;
 import model.Carta;
 import model.Disposizione;
 
@@ -20,13 +21,22 @@ public class View {
     private CartaGrafica briscola;
     private CartaGrafica mazzo;
     private Ellipse[] ellissiGiocatori;
+    private Pane schermataIniziale;
+
+    private Pane schermataVittoria;
+    private Pane schermataSconfitta;
+    private Pane schermataPareggio;
+
+    private Text puntiVittoria;
+    private Text puntiSconfitta;
+    private Text puntiPareggio;
 
     private Animator animator;
 
     private boolean primaDisposizione;
 
 
-    public View(Pane tavola, ImageView[] carteInTavola, ImageView briscola, ImageView[] carteInMano, ImageView[][] schiene, ImageView mazzo, Ellipse[] ellissiGiocatori){
+    public View(Pane tavola, ImageView[] carteInTavola, ImageView briscola, ImageView[] carteInMano, ImageView[][] schiene, ImageView mazzo, Ellipse[] ellissiGiocatori, Pane[] schermate, Text[] punti){
         this.tavola = tavola;
 
         this.carteInMano = new ArrayList<CartaGrafica>();
@@ -46,6 +56,15 @@ public class View {
                 this.schiene[i][j] = new CartaGrafica(schiene[i][j]);
             }
         }
+
+        this.schermataIniziale = schermate[0];
+        this.schermataVittoria = schermate[1];
+        this.schermataSconfitta = schermate[2];
+        this.schermataPareggio = schermate[3];
+
+        this.puntiVittoria = punti[0];
+        this.puntiSconfitta = punti[1];
+        this.puntiPareggio = punti[2];
 
         this.briscola = new CartaGrafica(briscola);
 
@@ -167,7 +186,7 @@ public class View {
 
                     for (i = 0; i < IDs.length; i++) {
                         try {
-                            Thread.sleep(800);
+                            Thread.sleep(animator.DELAY_PESCA);
                         } catch (Exception e) {
                         }
 
@@ -183,12 +202,12 @@ public class View {
                                         Platform.runLater(new Runnable() {
                                             @Override
                                             public void run() {
-                                                if (briscola != null && d.getBriscola() == null && idPesca == 3)
+                                                if (briscola != null && d.getBriscola() == null && idPesca == schiene.length)
                                                     animator.pescaBriscola(briscola.getImageView(), cartaInMano);
 
                                                 else {
                                                     animator.pescaCarta(mazzo.getImageView(), cartaInMano, imgNuovaCarta);
-                                                    if (briscola != null && d.getBriscola() == null && idPesca == 2)
+                                                    if (briscola != null && d.getBriscola() == null && idPesca == schiene.length-1)
                                                         mazzo.setCarta(null);
                                                 }
                                             }
@@ -210,11 +229,11 @@ public class View {
                                         Platform.runLater(new Runnable() {
                                             @Override
                                             public void run() {
-                                                if (briscola != null && d.getBriscola() == null && idPesca == 3)
+                                                if (briscola != null && d.getBriscola() == null && idPesca == schiene.length)
                                                     animator.pescaBriscolaAltriGiocatori(briscola.getImageView(), cartaInMano, posGiocatore);
                                                 else {
                                                     animator.pescaAltriGiocatori(mazzo.getImageView(), cartaInMano, posGiocatore);
-                                                    if (briscola != null && d.getBriscola() == null && idPesca == 2)
+                                                    if (briscola != null && d.getBriscola() == null && idPesca == schiene.length-1)
                                                         mazzo.setCarta(null);
                                                 }
                                             }
@@ -228,6 +247,14 @@ public class View {
                 }
             }
         }else {
+            if(d.getID() == schiene.length)
+                Platform.runLater(() -> {
+                    tavola.getChildren().remove(schermataIniziale);
+                });
+            else
+                Platform.runLater(() -> {
+                    animator.rimuoviSchermataIniziale(schermataIniziale);
+                });
             inizioPartita(carteInManoD, briscola, d.getBriscola());
             this.primaDisposizione = false;
         }
@@ -286,7 +313,7 @@ public class View {
 
         for (int i = 0; i < 3; i++) {
             final int idI = i;
-            try{Thread.sleep(500);} catch(Exception e) {}
+            try{Thread.sleep(animator.DELAY_PESCA);} catch(Exception e) {}
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
@@ -298,7 +325,7 @@ public class View {
 
             for (int j = 0; j < schiene.length; j++) {
                 final int idJ = j;
-                try{Thread.sleep(500);} catch(Exception e) {}
+                try{Thread.sleep(animator.DELAY_PESCA);} catch(Exception e) {}
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
@@ -312,13 +339,18 @@ public class View {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                animator.scopriBriscola(mazzo.getImageView(), briscola.getImageView(), imgBriscola, 1750);
+                animator.scopriBriscola(mazzo.getImageView(), briscola.getImageView(), imgBriscola);
             }
         });
     }
 
-    public void finePartita(){
-
+    public void finePartita(int esito , int punti){
+        if(esito == 0)
+            animator.schermataFinale(schermataVittoria, puntiVittoria, punti);
+        else if (esito == 1)
+            animator.schermataFinale(schermataSconfitta, puntiSconfitta, punti);
+        else
+            animator.schermataFinale(schermataPareggio, puntiPareggio, punti);
     }
 
     public CartaGrafica getCarta(int indice) {

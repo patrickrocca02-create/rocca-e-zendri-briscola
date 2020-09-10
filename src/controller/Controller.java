@@ -6,6 +6,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
+import javafx.scene.text.Text;
 import view.View;
 
 import java.net.InetAddress;
@@ -42,6 +43,15 @@ public class Controller {
     @FXML private Ellipse ellisse2 = null;
     @FXML private Ellipse ellisse3 = null;
     @FXML private Ellipse ellisse4 = null;
+
+    @FXML private Pane schermataIniziale = null;
+    @FXML private Pane schermataVittoria = null;
+    @FXML private Pane schermataSconfitta = null;
+    @FXML private Pane schermataPareggio = null;
+
+    @FXML private Text puntiVittoria = null;
+    @FXML private Text puntiSconfitta = null;
+    @FXML private Text puntiPareggio = null;
 
     @FXML
     void initialize(){
@@ -81,15 +91,13 @@ public class Controller {
         for (int i = 0; i < len; i++)
             ellissiGiocatori[i] = ellissiTot[i];
 
+        Pane[] schermate = {schermataIniziale, schermataVittoria, schermataSconfitta, schermataPareggio};
+        Text[] punti = {puntiVittoria, puntiSconfitta, puntiPareggio};
 
-        view = new View(tavola, carteInTavola, briscola,carteInMano,schiene,mazzo, ellissiGiocatori);
+        view = new View(tavola, carteInTavola, briscola,carteInMano,schiene,mazzo, ellissiGiocatori, schermate, punti);
 
-        try {
-            giocatore = new Client(InetAddress.getLocalHost(), 2201, view);
-        }catch (Exception e){ e.printStackTrace(); }
-
-        System.out.println("CONNESSO");
-        giocatore.start();
+        giocatore = ApplicationMain.client;
+        giocatore.setView(view);
     }
 
     @FXML
