@@ -186,7 +186,7 @@ public class View {
 
                     for (i = 0; i < IDs.length; i++) {
                         try {
-                            Thread.sleep(animator.DELAY_PESCA);
+                            Thread.sleep(animator.DELAY_PESCA*3/4);
                         } catch (Exception e) {
                         }
 
@@ -215,6 +215,11 @@ public class View {
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
+
+                                    try {
+                                        Thread.sleep(animator.DELAY_PESCA/4);
+                                    } catch (Exception e) {
+                                    }
                                     carteInMano.get(j).setCarta(carteInManoD.get(j));
                                 }
                                 j++;
@@ -238,6 +243,11 @@ public class View {
                                                 }
                                             }
                                         });
+
+                                        try {
+                                            Thread.sleep(animator.DELAY_PESCA/4);
+                                        } catch (Exception e) {
+                                        }
                                         schiene[IDs[i] - 1][j].setSchiena(d.getSchiene()[IDs[i] - 1][j]);
                                     }
                                 }

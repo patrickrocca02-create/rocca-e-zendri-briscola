@@ -119,6 +119,9 @@ public class Controller {
         if(labelNomeCrea.getText().length() > 2){
             labelNomeUnisciti.setText(labelNomeCrea.getText());
             nomeJoinScelto = true;
+            if(portaScelta && ipScelto)
+                btnUnisciti.setDisable(false);
+
             nomeCreaScelto = true;
             if(nGiocatoriScelti)
                 btnCrea.setDisable(false);
@@ -133,6 +136,9 @@ public class Controller {
         if(labelNomeUnisciti.getText().length() > 2){
             labelNomeCrea.setText(labelNomeUnisciti.getText());
             nomeCreaScelto = true;
+            if(nGiocatoriScelti)
+                btnCrea.setDisable(false);
+
             nomeJoinScelto = true;
             if(portaScelta && ipScelto)
                 btnUnisciti.setDisable(false);
