@@ -45,6 +45,8 @@
                   <Font name="Comic Sans MS Bold" size="35.0" />
                </font>
             </Text>
+            <Text fx:id="testoIpServer" fill="WHITE" layoutX="10.0" layoutY="500.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Indirizzo IP del server: " wrappingWidth="288.13671875" />
+            <Text fx:id="testoPorta" fill="WHITE" layoutX="10.0" layoutY="520.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Porta: " wrappingWidth="288.13671875" />
          </children>
       </Pane>
       <Pane fx:id="schermataVittoria" mouseTransparent="true" opacity="0.0" prefHeight="800.0" prefWidth="600.0" stylesheets="@../css/stili.css">

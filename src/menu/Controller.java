@@ -91,8 +91,9 @@ public class Controller {
         new Thread(() -> {
             s.start();
         }).start();
-
-        controller.ApplicationMain.loadGame(new String[0], s.getPorta(), s.getIpv4());
+        try {
+            controller.ApplicationMain.loadGame(new String[0], s.getPorta(), InetAddress.getLocalHost());
+        }catch (Exception e){}
     }
 
     @FXML

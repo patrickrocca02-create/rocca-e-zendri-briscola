@@ -1,6 +1,7 @@
 package controller;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -53,6 +54,10 @@ public class Controller {
     @FXML private Text puntiSconfitta = null;
     @FXML private Text puntiPareggio = null;
 
+    @FXML private Text testoIpServer;
+    @FXML private Text testoPorta;
+
+
     @FXML
     void initialize(){
         ImageView[] carteInMano = {carta1, carta2, carta3};
@@ -92,12 +97,14 @@ public class Controller {
             ellissiGiocatori[i] = ellissiTot[i];
 
         Pane[] schermate = {schermataIniziale, schermataVittoria, schermataSconfitta, schermataPareggio};
-        Text[] punti = {puntiVittoria, puntiSconfitta, puntiPareggio};
+        Text[] testi = {puntiVittoria, puntiSconfitta, puntiPareggio, testoIpServer, testoPorta};
 
-        view = new View(tavola, carteInTavola, briscola,carteInMano,schiene,mazzo, ellissiGiocatori, schermate, punti);
+        view = new View(tavola, carteInTavola, briscola,carteInMano,schiene,mazzo, ellissiGiocatori, schermate, testi);
 
         giocatore = ApplicationMain.client;
         giocatore.setView(view);
+
+        view.primaSchermata(ApplicationMain.indirizzo.getHostAddress(), ApplicationMain.porta);
     }
 
     @FXML

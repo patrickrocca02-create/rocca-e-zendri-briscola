@@ -31,12 +31,15 @@ public class View {
     private Text puntiSconfitta;
     private Text puntiPareggio;
 
+    private Text testoIpServer;
+    private Text testoPorta;
+
     private Animator animator;
 
     private boolean primaDisposizione;
 
 
-    public View(Pane tavola, ImageView[] carteInTavola, ImageView briscola, ImageView[] carteInMano, ImageView[][] schiene, ImageView mazzo, Ellipse[] ellissiGiocatori, Pane[] schermate, Text[] punti){
+    public View(Pane tavola, ImageView[] carteInTavola, ImageView briscola, ImageView[] carteInMano, ImageView[][] schiene, ImageView mazzo, Ellipse[] ellissiGiocatori, Pane[] schermate, Text[] testi){
         this.tavola = tavola;
 
         this.carteInMano = new ArrayList<CartaGrafica>();
@@ -62,9 +65,11 @@ public class View {
         this.schermataSconfitta = schermate[2];
         this.schermataPareggio = schermate[3];
 
-        this.puntiVittoria = punti[0];
-        this.puntiSconfitta = punti[1];
-        this.puntiPareggio = punti[2];
+        this.puntiVittoria = testi[0];
+        this.puntiSconfitta = testi[1];
+        this.puntiPareggio = testi[2];
+        this.testoIpServer = testi[3];
+        this.testoPorta = testi[4];
 
         this.briscola = new CartaGrafica(briscola);
 
@@ -293,6 +298,11 @@ public class View {
 
         if(d.getBriscola() == null)
             this.mazzo.setCarta(null);
+    }
+
+    public void primaSchermata(String ip, int porta){
+        testoIpServer.setText("Indirizzo IP del Server: " + ip);
+        testoPorta.setText("Porta della partita: " + porta);
     }
 
     public void inizioPartita(ArrayList<Carta> carteInManoD, CartaGrafica briscola, Carta briscolaD){
