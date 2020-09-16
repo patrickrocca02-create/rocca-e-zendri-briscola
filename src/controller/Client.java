@@ -57,6 +57,7 @@ public class Client extends Thread{
             } catch (Exception e) { e.printStackTrace(); }
 
             if (inObj instanceof Disposizione) {
+                //ricevuta una disposizione
                 Disposizione d = (Disposizione) inObj;
                 this.turno = d.getTurno() == d.getID();
                 while(view == null)
@@ -66,9 +67,16 @@ public class Client extends Thread{
                     Thread.sleep(1000);
                 }catch (Exception e){}
             } else if (inObj instanceof Integer){
+                //ricevuto il numero di giocatori in fase di inizializzazione
                 ApplicationMain.nGiocatori = (int) (Integer) inObj;
+            }else if(inObj instanceof Carta[]){
+                //ricevute le carte del compagno a fine partita
+                for (Carta c : (Carta[]) inObj){
+                    System.out.println(c);
+                }
             }
             else{
+                //fine partita
                 finePartita((int[]) inObj);
                 fine = true;
             }

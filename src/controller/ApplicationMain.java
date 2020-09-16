@@ -23,6 +23,9 @@ public class ApplicationMain{
             partita.setTitle("Briscola");
             partita.setScene(new Scene(root));
             partita.show();
+
+            Platform.setImplicitExit(false);
+            ApplicationMain.nGiocatori = 0;
         }catch (Exception e){e.printStackTrace();}
     }
 
@@ -35,7 +38,7 @@ public class ApplicationMain{
 
         while(nGiocatori == 0)
             System.out.print("");
-        System.out.println(porta);
+        System.out.println("client: " + porta);
 
         new ApplicationMain().start();
     }

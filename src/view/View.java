@@ -148,6 +148,8 @@ public class View {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
+                            this.carteInTavola.get(i+1).setCarta(nuovaCarta);
+                            this.schiene[i][j].setSchiena(false);
                         }
                     }
                 }
@@ -175,12 +177,13 @@ public class View {
                     }
                 });
 
-                if (nCarteInMano == 3) {
-                    //assegnazione delle nuove carte in tavola alla view
-                    i = 0;
-                    for (CartaGrafica c : this.carteInTavola)
-                        c.setCarta(carteInTavolaD.get(i++));
+                //assegnazione delle nuove carte in tavola alla view
+                i = 0;
+                for (CartaGrafica c : this.carteInTavola)
+                    c.setCarta(carteInTavolaD.get(i++));
 
+
+                if (nCarteInMano == 3) {
                     //disposizione degli ID per ordine di pesca
                     IDs[0] = indexOfTurno;
                     for (i = 1; i < IDs.length; i++)
@@ -262,14 +265,16 @@ public class View {
                 }
             }
         }else {
-            if(d.getID() == schiene.length)
+            if(d.getID() == schiene.length) {
                 Platform.runLater(() -> {
                     tavola.getChildren().remove(schermataIniziale);
                 });
-            else
+            }
+            else {
                 Platform.runLater(() -> {
                     animator.rimuoviSchermataIniziale(schermataIniziale);
                 });
+            }
             inizioPartita(carteInManoD, briscola, d.getBriscola());
             this.primaDisposizione = false;
         }
@@ -333,26 +338,26 @@ public class View {
 
         for (int i = 0; i < 3; i++) {
             final int idI = i;
-            try{Thread.sleep(animator.DELAY_PESCA);} catch(Exception e) {}
+            try{Thread.sleep(animator.DELAY_PESCA+3/4);} catch(Exception e) {}
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
                     animator.pescaCarta(mazzo.getImageView(), carteInMano.get(idI).getImageView(), imgCarteInMano[idI]);
                 }
             });
-
+            try{Thread.sleep(animator.DELAY_PESCA/4);} catch(Exception e) {}
             this.carteInMano.get(i).setCarta(carteInManoD.get(i));
 
             for (int j = 0; j < schiene.length; j++) {
                 final int idJ = j;
-                try{Thread.sleep(animator.DELAY_PESCA);} catch(Exception e) {}
+                try{Thread.sleep(animator.DELAY_PESCA*3/4);} catch(Exception e) {}
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
                         animator.pescaAltriGiocatori(mazzo.getImageView(), schiene[idJ][idI].getImageView(), animator.getPosGiocatori(idJ+1));
                     }
                 });
-
+                try{Thread.sleep(animator.DELAY_PESCA/4);} catch(Exception e) {}
                 this.schiene[j][i].setSchiena(true);
             }
         }

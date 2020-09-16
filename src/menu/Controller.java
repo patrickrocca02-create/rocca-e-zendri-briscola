@@ -54,6 +54,7 @@ public class Controller {
             btnCrea.setDisable(false);
 
         nGiocatori = 2;
+        System.out.println(nGiocatori);
     }
 
     @FXML
@@ -67,6 +68,7 @@ public class Controller {
             btnCrea.setDisable(false);
 
         nGiocatori = 3;
+        System.out.println(nGiocatori);
     }
 
     @FXML
@@ -80,12 +82,14 @@ public class Controller {
             btnCrea.setDisable(false);
 
         nGiocatori = 4;
+        System.out.println(nGiocatori);
     }
 
     @FXML
     void onClickCrea(MouseEvent event) {
         String nome = labelNomeCrea.getText();
 
+        System.out.println(nGiocatori);
         Server s = new Server(nGiocatori);
 
         new Thread(() -> {

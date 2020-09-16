@@ -40,6 +40,7 @@ public class Server {
                 System.out.println("In attesa del giocatore " + i + "...");
                 clients.add(new Client(ss.accept(),i));
                 System.out.println("Giocatore " + i + " connesso");
+                System.out.println("server: " + partita.getNGiocatori());
                 clients.get(i).inviaNGiocatori(partita.getNGiocatori());
             } catch(Exception e) {}
         }
@@ -96,7 +97,22 @@ public class Server {
             }
 
             Disposizione d = new Disposizione(i, carteInMano, carteInTavola, briscola, turno,schiene);
-            clients.get(i++).inviaDisposizione(d);
+            clients.get(i).inviaDisposizione(d);
+
+            int nCarteInTavola = 0;
+            for(Carta c : carteInTavola)
+                if(c != null)
+                    nCarteInTavola++;
+
+            int nCarteInMano = 0;
+            for(Carta c : g.getCarteInMano())
+                if(c != null)
+                    nCarteInMano++;
+
+            if(partita.isMazzoFinito() && nCarteInTavola == 0 && nCarteInMano == 3 && partita.getNGiocatori() == 4)
+                clients.get(i).inviaCarteInMano(g.getCarteInMano());
+
+            i++;
         }
     }
 
