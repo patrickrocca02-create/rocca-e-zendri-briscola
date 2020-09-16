@@ -1,5 +1,8 @@
 package model;
 
+import javafx.scene.image.Image;
+
+import java.io.FileInputStream;
 import java.io.Serializable;
 
 public class Carta implements Serializable {
@@ -30,6 +33,13 @@ public class Carta implements Serializable {
     }
     public int getNumero() {
         return numero;
+    }
+
+    public Image getImage(){
+        try {
+            return new Image(new FileInputStream("src/carte/" + this.getSeme() + " " + this.getNumero() + ".png"));
+        }catch (Exception e){}
+        return null;
     }
 
     @Override

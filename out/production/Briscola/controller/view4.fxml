@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.Pane?>
@@ -37,14 +38,94 @@
       <ImageView fx:id="schiena8" fitHeight="180.0" fitWidth="115.0" layoutX="-40.0" layoutY="392.0" pickOnBounds="true" preserveRatio="true" rotate="90.0" />
       <ImageView fx:id="schiena7" fitHeight="180.0" fitWidth="115.0" layoutX="-40.0" layoutY="242.0" pickOnBounds="true" preserveRatio="true" rotate="90.0" />
       <ImageView fx:id="cartaInTavola4" fitHeight="180.0" fitWidth="115.0" layoutX="174.0" layoutY="485.0" pickOnBounds="true" preserveRatio="true" />
-      <Pane fx:id="schermataIniziale" prefHeight="900.0" prefWidth="900.0" stylesheets="@../font/font.css">
+      <Pane fx:id="schermataIniziale" disable="true" prefHeight="900.0" prefWidth="900.0" stylesheets="@../font/font.css">
          <children>
-            <Pane opacity="0.5" prefHeight="900.0" prefWidth="900.0" style="-fx-background-color: black;" stylesheets="@../font/font.css" />
-            <Text fill="WHITE" fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" text="In attesa degli altri giocatori..." textAlignment="CENTER" x="180.0" y="450.0">
+            <Pane opacity="0.5" prefHeight="900.0" prefWidth="900.0" style="-fx-background-color: black;" stylesheets="@../font/font.css">
+               <children>
+                  <Text fx:id="testoIpServer" fill="WHITE" layoutX="28.0" layoutY="699.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Indirizzo IP del server: " wrappingWidth="288.13671875" />
+                  <Text fx:id="testoPorta" fill="WHITE" layoutX="28.0" layoutY="719.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Porta: " wrappingWidth="288.13671875" />
+               </children>
+            </Pane>
+            <Text fill="WHITE" fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" text="In attesa degli altri giocatori..." textAlignment="CENTER" x="210.0" y="450.0">
                <font>
                   <Font name="Comic Sans MS Bold" size="35.0" />
                </font>
             </Text>
+         </children>
+      </Pane>
+      <Pane fx:id="schermataVittoria" mouseTransparent="true" opacity="0.0" prefHeight="900.0" prefWidth="900.0" stylesheets="@../css/stili.css">
+         <children>
+            <Rectangle arcHeight="50.0" arcWidth="50.0" fill="#8a581f" height="600.0" layoutX="50.0" layoutY="100.0" opacity="0.8" stroke="BLACK" strokeType="INSIDE" styleClass="fine" width="500.0" />
+            <ImageView fitHeight="496.0" fitWidth="541.0" layoutX="52.0" layoutY="116.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../css/images/trofeo.png" />
+               </image>
+            </ImageView>
+            <Text layoutX="156.0" layoutY="159.0" strokeType="OUTSIDE" strokeWidth="0.0" text="HAI VINTO" textAlignment="CENTER" wrappingWidth="288.13671875">
+               <font>
+                  <Font name="Comic Sans MS Bold" size="46.0" />
+               </font>
+            </Text>
+            <Text fx:id="puntiVittoria" layoutX="144.0" layoutY="589.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Punti: " textAlignment="CENTER" wrappingWidth="313.0">
+               <font>
+                  <Font name="Comic Sans MS Bold" size="35.0" />
+               </font>
+            </Text>
+         </children>
+      </Pane>
+      <Pane fx:id="schermataSconfitta" mouseTransparent="true" opacity="0.0" prefHeight="900.0" prefWidth="900.0" stylesheets="@../css/stili.css">
+         <children>
+            <Rectangle arcHeight="50.0" arcWidth="50.0" fill="#8a581f" height="600.0" layoutX="50.0" layoutY="100.0" opacity="0.8" stroke="BLACK" strokeType="INSIDE" styleClass="fine" width="500.0" />
+            <ImageView fitHeight="310.0" fitWidth="277.0" layoutX="162.0" layoutY="217.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../css/images/croce.png" />
+               </image>
+            </ImageView>
+            <Text layoutX="156.0" layoutY="159.0" strokeType="OUTSIDE" strokeWidth="0.0" text="HAI PERSO" textAlignment="CENTER" wrappingWidth="288.13671875">
+               <font>
+                  <Font name="Comic Sans MS Bold" size="46.0" />
+               </font>
+            </Text>
+            <Text fx:id="puntiSconfitta" layoutX="144.0" layoutY="589.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Punti: " textAlignment="CENTER" wrappingWidth="313.0">
+               <font>
+                  <Font name="Comic Sans MS Bold" size="35.0" />
+               </font>
+            </Text>
+         </children>
+      </Pane>
+      <Pane fx:id="schermataPareggio" mouseTransparent="true" opacity="0.0" prefHeight="900.0" prefWidth="900.0" stylesheets="@../css/stili.css">
+         <children>
+            <Rectangle arcHeight="50.0" arcWidth="50.0" fill="#8a581f" height="600.0" layoutX="50.0" layoutY="100.0" opacity="0.8" stroke="BLACK" strokeType="INSIDE" styleClass="fine" width="500.0" />
+            <ImageView fitHeight="357.0" fitWidth="410.0" layoutX="122.0" layoutY="193.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../css/images/pareggio.png" />
+               </image>
+            </ImageView>
+            <Text layoutX="156.0" layoutY="159.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pareggio" textAlignment="CENTER" wrappingWidth="288.13671875">
+               <font>
+                  <Font name="Comic Sans MS Bold" size="46.0" />
+               </font>
+            </Text>
+            <Text fx:id="puntiPareggio" layoutX="144.0" layoutY="550.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Punti: " textAlignment="CENTER" wrappingWidth="313.0">
+               <font>
+                  <Font name="Comic Sans MS Bold" size="35.0" />
+               </font>
+            </Text>
+         </children>
+      </Pane>
+      <Pane fx:id="schermataCarteCompagno" mouseTransparent="true" opacity="0.0" prefHeight="900.0" prefWidth="900.0" stylesheets="@../css/stili.css">
+         <children>
+            <Pane opacity="0.5" prefHeight="900.0" prefWidth="900.0" style="-fx-background-color: black;" />
+            <Rectangle arcHeight="50.0" arcWidth="50.0" fill="#8a581f" height="357.0" layoutX="200.0" layoutY="219.0" opacity="0.8" stroke="BLACK" strokeType="INSIDE" styleClass="fine" width="500.0" />
+            <Text layoutX="300.0" layoutY="273.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Carte di :" textAlignment="CENTER" wrappingWidth="288.13671875">
+               <font>
+                  <Font name="Comic Sans MS Bold" size="46.0" />
+               </font>
+            </Text>
+            <ImageView fx:id="cartaCompagno1" fitHeight="180.0" fitWidth="115.0" layoutX="245.0" layoutY="319.0" onMouseClicked="#onClickCarta1" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="cartaCompagno2" fitHeight="180.0" fitWidth="115.0" layoutX="395.0" layoutY="319.0" onMouseClicked="#onClickCarta2" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="cartaCompagno3" fitHeight="180.0" fitWidth="115.0" layoutX="545.0" layoutY="319.0" onMouseClicked="#onClickCarta3" pickOnBounds="true" preserveRatio="true" />
+            <Button layoutX="416.0" layoutY="530.0" mnemonicParsing="false" onKeyReleased="#onReleaseCarteCompagno" text="Finito" />
          </children>
       </Pane>
    </children>

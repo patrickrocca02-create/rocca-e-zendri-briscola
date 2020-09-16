@@ -71,9 +71,7 @@ public class Client extends Thread{
                 ApplicationMain.nGiocatori = (int) (Integer) inObj;
             }else if(inObj instanceof Carta[]){
                 //ricevute le carte del compagno a fine partita
-                for (Carta c : (Carta[]) inObj){
-                    System.out.println(c);
-                }
+                view.mostraCarteCompagno((Carta[]) inObj);
             }
             else{
                 //fine partita

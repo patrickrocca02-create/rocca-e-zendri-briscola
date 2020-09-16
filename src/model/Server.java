@@ -109,8 +109,12 @@ public class Server {
                 if(c != null)
                     nCarteInMano++;
 
-            if(partita.isMazzoFinito() && nCarteInTavola == 0 && nCarteInMano == 3 && partita.getNGiocatori() == 4)
-                clients.get(i).inviaCarteInMano(g.getCarteInMano());
+            if(partita.isMazzoFinito() && nCarteInTavola == 0 && nCarteInMano == 3 && partita.getNGiocatori() == 4){
+                if(i > 1)
+                    clients.get(i - 2).inviaCarteInMano(g.getCarteInMano());
+                else
+                    clients.get(i + 2).inviaCarteInMano(g.getCarteInMano());
+            }
 
             i++;
         }

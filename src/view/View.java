@@ -11,6 +11,7 @@ import model.Disposizione;
 
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.EmptyStackException;
 
 public class View {
     private Pane tavola;
@@ -26,6 +27,9 @@ public class View {
     private Pane schermataVittoria;
     private Pane schermataSconfitta;
     private Pane schermataPareggio;
+    private Pane schermataCarteCompagno;
+
+    private ArrayList<ImageView> carteCompagno;
 
     private Text puntiVittoria;
     private Text puntiSconfitta;
@@ -39,15 +43,15 @@ public class View {
     private boolean primaDisposizione;
 
 
-    public View(Pane tavola, ImageView[] carteInTavola, ImageView briscola, ImageView[] carteInMano, ImageView[][] schiene, ImageView mazzo, Ellipse[] ellissiGiocatori, Pane[] schermate, Text[] testi){
+    public View(Pane tavola, ImageView[] carteInTavola, ImageView briscola, ImageView[] carteInMano, ImageView[][] schiene, ImageView mazzo, Ellipse[] ellissiGiocatori, Pane[] schermate, Text[] testi, ImageView[] carteCompagno){
         this.tavola = tavola;
 
-        this.carteInMano = new ArrayList<CartaGrafica>();
+        this.carteInMano = new ArrayList<>();
         this.carteInMano.add(new CartaGrafica(carteInMano[0]));
         this.carteInMano.add(new CartaGrafica(carteInMano[1]));
         this.carteInMano.add(new CartaGrafica(carteInMano[2]));
 
-        this.carteInTavola = new ArrayList<CartaGrafica>();
+        this.carteInTavola = new ArrayList<>();
         for (ImageView c : carteInTavola) {
             this.carteInTavola.add(new CartaGrafica(c));
         }
@@ -64,6 +68,11 @@ public class View {
         this.schermataVittoria = schermate[1];
         this.schermataSconfitta = schermate[2];
         this.schermataPareggio = schermate[3];
+        this.schermataCarteCompagno = schermate[4];
+
+        this.carteCompagno = new ArrayList<>();
+        for(ImageView iv : carteCompagno)
+            this.carteCompagno.add(iv);
 
         this.puntiVittoria = testi[0];
         this.puntiSconfitta = testi[1];
@@ -104,7 +113,6 @@ public class View {
             }
 
         if(!primaDisposizione) {
-
             int nCarteInMano = 0;
             for(Carta c : carteInManoD)
                 if(c != null)
@@ -120,6 +128,7 @@ public class View {
                         Platform.runLater(new Runnable() {
                             @Override
                             public void run() {
+                                System.out.println("metti in tavola tu");
                                 animator.mettiInTavola(cartaInMano, cartaInTavola);
                             }
                         });
@@ -136,20 +145,15 @@ public class View {
                             ImageView schiena = this.schiene[i][j].getImageView();
                             ImageView cartaInTavola = this.carteInTavola.get(i + 1).getImageView();
                             Carta nuovaCarta = d.getCarteInTavola().get(i + 1);
+                            Image imgNuovaCarta = nuovaCarta.getImage();
                             final int posGiocatore = animator.getPosGiocatori(i + 1);
-                            try {
-                                Image imgNuovaCarta = new Image(new FileInputStream("src/carte/" + nuovaCarta.getSeme() + " " + nuovaCarta.getNumero() + ".png"));
-                                Platform.runLater(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        animator.mettiInTavolaAltriGiocatori(schiena, cartaInTavola, imgNuovaCarta, posGiocatore);
-                                    }
-                                });
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            this.carteInTavola.get(i+1).setCarta(nuovaCarta);
-                            this.schiene[i][j].setSchiena(false);
+                            Platform.runLater(new Runnable() {
+                                @Override
+                                public void run() {
+                                    System.out.println("metti in tavola altri giocatori");
+                                    animator.mettiInTavolaAltriGiocatori(schiena, cartaInTavola, imgNuovaCarta, posGiocatore);
+                                }
+                            });
                         }
                     }
                 }
@@ -204,9 +208,10 @@ public class View {
                                 if (c.getCarta() == null && carteInManoD.get(j) != null) {
                                     ImageView cartaInMano = this.carteInMano.get(j).getImageView();
                                     Carta nuovaCarta = carteInManoD.get(j);
+                                    Image imgNuovaCarta = nuovaCarta.getImage();
                                     final int idPesca = i;
                                     try {
-                                        Image imgNuovaCarta = new Image(new FileInputStream("src/carte/" + nuovaCarta.getSeme() + " " + nuovaCarta.getNumero() + ".png"));
+                                        System.out.println("pesca");
                                         Platform.runLater(new Runnable() {
                                             @Override
                                             public void run() {
@@ -239,6 +244,7 @@ public class View {
                                         ImageView cartaInMano = this.schiene[IDs[i] - 1][j].getImageView();
                                         final int posGiocatore = animator.getPosGiocatori(IDs[i]);
                                         final int idPesca = i;
+                                        System.out.println("pescaAltriGiocatori");
                                         Platform.runLater(new Runnable() {
                                             @Override
                                             public void run() {
@@ -282,7 +288,9 @@ public class View {
         if(d.getTurno() != -1)
             animator.cambiaTurno(indexOfTurno, ellissiGiocatori);
 
-
+        try{
+            Thread.sleep(50);
+        }catch (Exception e){}
         int i = 0;
         for(CartaGrafica c : this.carteInMano){
             c.setCarta(carteInManoD.get(i++));
@@ -329,16 +337,12 @@ public class View {
             IVCarteInMano[i] = carteInMano.get(i).getImageView();
         }
 
-        Image img = null;
-        try {
-            img = new Image(new FileInputStream("src/carte/" + briscolaD.getSeme() + " " + briscolaD.getNumero() + ".png"));
-        }catch (Exception e){}
-
-        final Image imgBriscola = img;
+        final Image imgBriscola = briscolaD.getImage();
 
         for (int i = 0; i < 3; i++) {
             final int idI = i;
             try{Thread.sleep(animator.DELAY_PESCA+3/4);} catch(Exception e) {}
+            System.out.println("pescaCarta");
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
@@ -351,6 +355,7 @@ public class View {
             for (int j = 0; j < schiene.length; j++) {
                 final int idJ = j;
                 try{Thread.sleep(animator.DELAY_PESCA*3/4);} catch(Exception e) {}
+                System.out.println("pescaAltriGiocatori");
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
@@ -361,6 +366,7 @@ public class View {
                 this.schiene[j][i].setSchiena(true);
             }
         }
+        System.out.println("scopriBriscola");
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
@@ -371,11 +377,38 @@ public class View {
 
     public void finePartita(int esito , int punti){
         if(esito == 0)
-            animator.schermataFinale(schermataVittoria, puntiVittoria, punti);
+            animator.mostraSchermataFinale(schermataVittoria, puntiVittoria, punti);
         else if (esito == 1)
-            animator.schermataFinale(schermataSconfitta, puntiSconfitta, punti);
+            animator.mostraSchermataFinale(schermataSconfitta, puntiSconfitta, punti);
         else
-            animator.schermataFinale(schermataPareggio, puntiPareggio, punti);
+            animator.mostraSchermataFinale(schermataPareggio, puntiPareggio, punti);
+    }
+
+    public void mostraCarteCompagno(Carta[] carteCompagno){
+        Image[] imgsCarte = new Image[3];
+        for (int i = 0; i < 3; i++) {
+            imgsCarte[i] = carteCompagno[i].getImage();
+        }
+
+        ImageView[] ivs = this.carteCompagno.toArray(new ImageView[3]);
+        System.out.println("mostraCarteCompagno");
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                animator.mostraSchermataCarteCompagno(schermataCarteCompagno, ivs, imgsCarte);
+                schermataCarteCompagno.setMouseTransparent(false);
+            }
+        });
+    }
+
+    public void nascondiCarteCompagno(){
+        System.out.println("nascondiCarteCompagno");
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                animator.nascondiSchermataCarteCompagno(schermataCarteCompagno);
+            }
+        });
     }
 
     public CartaGrafica getCarta(int indice) {

@@ -6,7 +6,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
-import javafx.geometry.Point3D;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -18,9 +17,6 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 import java.io.FileInputStream;
-import java.io.SequenceInputStream;
-import java.security.spec.RSAOtherPrimeInfo;
-import java.time.temporal.Temporal;
 import java.util.Collections;
 
 public class Animator {
@@ -36,7 +32,9 @@ public class Animator {
     private final int TEMPO_SCOPRI = 400;
     private final int TEMPO_SCOPRI_BRISCOLA = 1750;
     public final int DELAY_PESCA = 500;
-    private final int FADE_OUT_SCHERMATA_INIZIALE = 250;
+    private final int TEMPO_FADE_OUT_SCHERMATA_INIZIALE = 250;
+    private final int TEMPO_FADE_IN_CARTE_COMPAGNO = 250;
+    private final int TEMPO_FADE_OUT_CARTE_COMPAGNO = 250;
 
     public Animator(Pane tavola, int nGiocatori){
         this.tavola = tavola;
@@ -174,6 +172,7 @@ public class Animator {
                 carta.setVisible(true);
                 destinazione.setVisible(true);
                 tavola.getChildren().remove(copia);
+                System.out.println("FINE ANIMAZIONE GIOCA CARTA");
             }
         });
 
@@ -348,16 +347,36 @@ public class Animator {
     public void cambiaTurno(int idTurno, Ellipse[] e){
         int attesa = TEMPO_PESCA;
 
+
+
         for(int i = 0; i < e.length; i++){
-            if (i == idTurno)
-                new SequentialTransition(new StrokeTransition(Duration.millis(attesa), e[i]),new StrokeTransition(Duration.millis(10), e[i], (Color) e[i].getStroke(), Color.LIGHTGREEN)).play();
-            else
-                new SequentialTransition(new StrokeTransition(Duration.millis(attesa), e[i]),new StrokeTransition(Duration.millis(10), e[i], (Color) e[i].getStroke(), Color.rgb(161, 92, 19))).play();
+            SequentialTransition cambiaColore = new SequentialTransition(new StrokeTransition(Duration.millis(attesa), e[i]));
+            StrokeTransition strokeTransition = new StrokeTransition(Duration.millis(10), e[i]);
+            strokeTransition.setFromValue((Color) e[i].getStroke());
+            final Color toColor;
+            if (i == idTurno) {
+                System.out.println("LIGHTGREEN");
+                toColor = Color.LIGHTGREEN;
+            }else{
+                System.out.println("MARRONE");
+                toColor = Color.rgb(161, 92, 19);
+            }
+            cambiaColore.getChildren().add(strokeTransition);
+            Ellipse ellipse = e[i];
+            cambiaColore.setOnFinished(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent actionEvent) {
+                    System.out.println(toColor);
+                    ellipse.setStroke(toColor);
+                }
+            });
+
+            cambiaColore.play();
         }
     }
 
     public void rimuoviSchermataIniziale(Pane schermataIniziale){
-        FadeTransition fadeTransition = new FadeTransition(Duration.millis(FADE_OUT_SCHERMATA_INIZIALE), schermataIniziale);
+        FadeTransition fadeTransition = new FadeTransition(Duration.millis(TEMPO_FADE_OUT_SCHERMATA_INIZIALE), schermataIniziale);
         fadeTransition.setFromValue(1);
         fadeTransition.setToValue(0);
 
@@ -371,11 +390,39 @@ public class Animator {
         fadeTransition.play();
     }
 
-    public void schermataFinale(Pane schermata, Text testoPunti, int punti){
+    public void mostraSchermataFinale(Pane schermata, Text testoPunti, int punti){
         testoPunti.setText("Punti: " + punti);
-        FadeTransition fadeTransition = new FadeTransition(Duration.millis(FADE_OUT_SCHERMATA_INIZIALE), schermata);
+        FadeTransition fadeTransition = new FadeTransition(Duration.millis(TEMPO_FADE_OUT_SCHERMATA_INIZIALE), schermata);
         fadeTransition.setFromValue(0);
         fadeTransition.setToValue(1);
+
+        fadeTransition.play();
+    }
+
+    public void mostraSchermataCarteCompagno(Pane schermataCarte, ImageView[] carteCompagno, Image[] imgCarteCompagno){
+        int i = 0;
+        for(ImageView c : carteCompagno)
+            c.setImage(imgCarteCompagno[i++]);
+
+        FadeTransition fadeTransition = new FadeTransition(Duration.millis(TEMPO_FADE_IN_CARTE_COMPAGNO), schermataCarte);
+        fadeTransition.setFromValue(0);
+        fadeTransition.setToValue(1);
+
+        fadeTransition.play();
+    }
+
+    public void nascondiSchermataCarteCompagno(Pane schermataCarte){
+        System.out.println("Mouse transparency: " + schermataCarte.isMouseTransparent());
+        FadeTransition fadeTransition = new FadeTransition(Duration.millis(TEMPO_FADE_OUT_CARTE_COMPAGNO), schermataCarte);
+        fadeTransition.setFromValue(1);
+        fadeTransition.setToValue(0);
+
+        fadeTransition.setOnFinished(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(final ActionEvent actionEvent) {
+                tavola.getChildren().remove(schermataCarte);
+            }
+        });
 
         fadeTransition.play();
     }

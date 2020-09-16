@@ -49,6 +49,11 @@ public class Controller {
     @FXML private Pane schermataVittoria = null;
     @FXML private Pane schermataSconfitta = null;
     @FXML private Pane schermataPareggio = null;
+    @FXML private Pane schermataCarteCompagno = null;
+
+    @FXML private ImageView cartaCompagno1 = null;
+    @FXML private ImageView cartaCompagno2 = null;
+    @FXML private ImageView cartaCompagno3 = null;
 
     @FXML private Text puntiVittoria = null;
     @FXML private Text puntiSconfitta = null;
@@ -96,10 +101,11 @@ public class Controller {
         for (int i = 0; i < len; i++)
             ellissiGiocatori[i] = ellissiTot[i];
 
-        Pane[] schermate = {schermataIniziale, schermataVittoria, schermataSconfitta, schermataPareggio};
+        Pane[] schermate = {schermataIniziale, schermataVittoria, schermataSconfitta, schermataPareggio, schermataCarteCompagno};
         Text[] testi = {puntiVittoria, puntiSconfitta, puntiPareggio, testoIpServer, testoPorta};
+        ImageView[] carteCompagno = {cartaCompagno1, cartaCompagno2, cartaCompagno3};
 
-        view = new View(tavola, carteInTavola, briscola,carteInMano,schiene,mazzo, ellissiGiocatori, schermate, testi);
+        view = new View(tavola, carteInTavola, briscola,carteInMano,schiene,mazzo, ellissiGiocatori, schermate, testi, carteCompagno);
 
         giocatore = ApplicationMain.client;
         giocatore.setView(view);
@@ -129,5 +135,10 @@ public class Controller {
             giocatore.setTurno(false);
             giocatore.inviaCarta(2);
         }
+    }
+
+    @FXML
+    void onReleaseCarteCompagno(MouseEvent event){
+        view.nascondiCarteCompagno();
     }
 }
