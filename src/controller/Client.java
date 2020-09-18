@@ -15,18 +15,20 @@ public class Client extends Thread{
     private ObjectOutputStream out;
     private ObjectInputStream in;
     private boolean turno;
+    private String nome;
 
-    public Client(InetAddress ipServer, int porta){
+    public Client(InetAddress ipServer, int porta, String nome) throws Exception{
         Socket client = null;
-        try{
-            client = new Socket(ipServer,porta);
-        }catch (Exception e){ e.printStackTrace(); }
+        System.out.println("Tentativo di connessione...");
+        client = new Socket(ipServer,porta);
+
         try {
             out = new ObjectOutputStream(client.getOutputStream());
         }catch (Exception e){ e.printStackTrace(); }
         try {
             in = new ObjectInputStream(client.getInputStream());
         }catch (Exception e){ e.printStackTrace(); }
+        this.nome = nome;
     }
 
     public void inviaCarta(int indice){
@@ -35,6 +37,13 @@ public class Client extends Thread{
             out.writeObject(view.getCarta(indice).getCarta());
             out.flush();
         }catch (Exception e) { e.printStackTrace(); }
+    }
+
+    private void inviaNome(){
+        try{
+            out.writeObject(nome);
+            out.flush();
+        }catch (Exception e){ e.printStackTrace(); }
     }
 
     private void finePartita(int[] esito) {
@@ -60,8 +69,6 @@ public class Client extends Thread{
                 //ricevuta una disposizione
                 Disposizione d = (Disposizione) inObj;
                 this.turno = d.getTurno() == d.getID();
-                while(view == null)
-                    System.out.print("");
                 view.aggiornaView(d);
                 try {
                     Thread.sleep(1000);
@@ -69,11 +76,22 @@ public class Client extends Thread{
             } else if (inObj instanceof Integer){
                 //ricevuto il numero di giocatori in fase di inizializzazione
                 ApplicationMain.nGiocatori = (int) (Integer) inObj;
+                inviaNome();
             }else if(inObj instanceof Carta[]){
                 //ricevute le carte del compagno a fine partita
                 view.mostraCarteCompagno((Carta[]) inObj);
             }
-            else{
+            else if(inObj instanceof String[]){
+                String[] nomi = (String[]) inObj;
+                int indiceNomi = 0;
+                try{
+                    indiceNomi = (int) in.readObject();
+                }catch (Exception e) { e.printStackTrace(); }
+
+                while(view == null)
+                    System.out.print("");
+                view.setNomi(nomi, indiceNomi);
+            }else{
                 //fine partita
                 finePartita((int[]) inObj);
                 fine = true;

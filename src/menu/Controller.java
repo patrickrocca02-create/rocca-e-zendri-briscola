@@ -1,5 +1,6 @@
 package menu;
 
+import controller.ApplicationMain;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -8,6 +9,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 
+import javafx.scene.text.Text;
 import model.Server;
 
 import java.net.InetAddress;
@@ -28,6 +30,8 @@ public class Controller {
     @FXML private TextField labelNomeUnisciti;
     @FXML private TextField labelPorta;
     @FXML private TextField labelIpv4;
+
+    @FXML private Text testoConnessione;
 
     private ToggleButton[] btnsNGiocatori;
     private int nGiocatori;
@@ -96,7 +100,7 @@ public class Controller {
             s.start();
         }).start();
         try {
-            controller.ApplicationMain.loadGame(new String[0], s.getPorta(), InetAddress.getLocalHost());
+            controller.ApplicationMain.loadGame(new String[0], s.getPorta(), InetAddress.getLocalHost(), labelNomeCrea.getText());
         }catch (Exception e){}
     }
 
@@ -114,9 +118,23 @@ public class Controller {
 
     @FXML
     void onClickUnisciti(MouseEvent event) {
-        try {
-            controller.ApplicationMain.loadGame(new String[0], Integer.valueOf(labelPorta.getText()), InetAddress.getByName(labelIpv4.getText()));
-        }catch (Exception e){}
+        testoConnessione.setText("Tentativo di connessione...");
+        new Thread( () -> {
+            int porta = 0;
+            try {
+                porta = Integer.valueOf(labelPorta.getText());
+            }catch (Exception e){ e.printStackTrace(); }
+            InetAddress ip = null;
+            try {
+                ip = InetAddress.getByName(labelIpv4.getText());
+            }catch (Exception e){ e.printStackTrace(); }
+            try {
+                ApplicationMain.loadGame(new String[0], porta, ip, labelNomeUnisciti.getText());
+                testoConnessione.setText("");
+            }catch (Exception e){
+                testoConnessione.setText("Problema di connessione");
+            }
+        }).start();
     }
 
     @FXML

@@ -38,6 +38,10 @@
       <ImageView fx:id="schiena8" fitHeight="180.0" fitWidth="115.0" layoutX="-40.0" layoutY="392.0" pickOnBounds="true" preserveRatio="true" rotate="90.0" />
       <ImageView fx:id="schiena7" fitHeight="180.0" fitWidth="115.0" layoutX="-40.0" layoutY="242.0" pickOnBounds="true" preserveRatio="true" rotate="90.0" />
       <ImageView fx:id="cartaInTavola4" fitHeight="180.0" fitWidth="115.0" layoutX="174.0" layoutY="485.0" pickOnBounds="true" preserveRatio="true" />
+      <Text fx:id="username1" layoutX="705.0" layoutY="895.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+      <Text fx:id="username2" layoutX="870.0" layoutY="210.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+      <Text fx:id="username3" layoutX="705.0" layoutY="25.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+      <Text fx:id="username4" layoutX="20.0" layoutY="210.0" strokeType="OUTSIDE" strokeWidth="0.0" />
       <Pane fx:id="schermataIniziale" disable="true" prefHeight="900.0" prefWidth="900.0" stylesheets="@../font/font.css">
          <children>
             <Pane opacity="0.5" prefHeight="900.0" prefWidth="900.0" style="-fx-background-color: black;" stylesheets="@../font/font.css">
@@ -117,7 +121,7 @@
          <children>
             <Pane opacity="0.5" prefHeight="900.0" prefWidth="900.0" style="-fx-background-color: black;" />
             <Rectangle arcHeight="50.0" arcWidth="50.0" fill="#8a581f" height="357.0" layoutX="200.0" layoutY="219.0" opacity="0.8" stroke="BLACK" strokeType="INSIDE" styleClass="fine" width="500.0" />
-            <Text layoutX="300.0" layoutY="273.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Carte di :" textAlignment="CENTER" wrappingWidth="288.13671875">
+            <Text fx:id="testoCarteCompagno" layoutX="300.0" layoutY="273.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Carte di :" textAlignment="CENTER" wrappingWidth="288.13671875">
                <font>
                   <Font name="Comic Sans MS Bold" size="46.0" />
                </font>

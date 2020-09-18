@@ -1,7 +1,6 @@
 package controller;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -9,8 +8,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
 import javafx.scene.text.Text;
 import view.View;
-
-import java.net.InetAddress;
 
 public class Controller {
 
@@ -54,6 +51,7 @@ public class Controller {
     @FXML private ImageView cartaCompagno1 = null;
     @FXML private ImageView cartaCompagno2 = null;
     @FXML private ImageView cartaCompagno3 = null;
+    @FXML private Text testoCarteCompagno = null;
 
     @FXML private Text puntiVittoria = null;
     @FXML private Text puntiSconfitta = null;
@@ -62,6 +60,10 @@ public class Controller {
     @FXML private Text testoIpServer;
     @FXML private Text testoPorta;
 
+    @FXML private Text username1 = null;
+    @FXML private Text username2 = null;
+    @FXML private Text username3 = null;
+    @FXML private Text username4 = null;
 
     @FXML
     void initialize(){
@@ -101,11 +103,20 @@ public class Controller {
         for (int i = 0; i < len; i++)
             ellissiGiocatori[i] = ellissiTot[i];
 
+        Text[] usernamesTot = {username1, username2, username3, username4};
+        len = 0;
+        for(Text username : usernamesTot)
+            if(username != null)
+                len++;
+        Text[] usernames = new Text[len];
+        for (int i = 0; i < len; i++)
+            usernames[i] = usernamesTot[i];
+
         Pane[] schermate = {schermataIniziale, schermataVittoria, schermataSconfitta, schermataPareggio, schermataCarteCompagno};
-        Text[] testi = {puntiVittoria, puntiSconfitta, puntiPareggio, testoIpServer, testoPorta};
+        Text[] testi = {puntiVittoria, puntiSconfitta, puntiPareggio, testoIpServer, testoPorta, testoCarteCompagno};
         ImageView[] carteCompagno = {cartaCompagno1, cartaCompagno2, cartaCompagno3};
 
-        view = new View(tavola, carteInTavola, briscola,carteInMano,schiene,mazzo, ellissiGiocatori, schermate, testi, carteCompagno);
+        view = new View(tavola, carteInTavola, briscola,carteInMano,schiene,mazzo, usernames, ellissiGiocatori, schermate, testi, carteCompagno);
 
         giocatore = ApplicationMain.client;
         giocatore.setView(view);

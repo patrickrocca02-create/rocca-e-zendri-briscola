@@ -29,17 +29,19 @@ public class ApplicationMain{
         }catch (Exception e){e.printStackTrace();}
     }
 
-    public static void loadGame(String[] args, int porta, InetAddress ipLocale) {
+    public static void loadGame(String[] args, int porta, InetAddress ipLocale, String nome) throws Exception{
         ApplicationMain.porta = porta;
         ApplicationMain.indirizzo = ipLocale;
 
-        client = new Client(ApplicationMain.indirizzo, ApplicationMain.porta);
+        client = new Client(ApplicationMain.indirizzo, ApplicationMain.porta, nome);
         client.start();
 
         while(nGiocatori == 0)
             System.out.print("");
         System.out.println("client: " + porta);
 
-        new ApplicationMain().start();
+        Platform.runLater( () -> {
+            new ApplicationMain().start();
+        });
     }
 }

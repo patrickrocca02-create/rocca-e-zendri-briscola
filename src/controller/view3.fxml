@@ -32,6 +32,9 @@
       <ImageView fx:id="schiena3" fitHeight="180.0" fitWidth="115.0" layoutX="232.0" layoutY="-60.0" pickOnBounds="true" preserveRatio="true" />
       <ImageView fx:id="schiena5" fitHeight="180.0" fitWidth="115.0" layoutX="-40.0" layoutY="360.0" pickOnBounds="true" preserveRatio="true" rotate="90.0" />
       <ImageView fx:id="schiena4" fitHeight="180.0" fitWidth="115.0" layoutX="-40.0" layoutY="225.0" pickOnBounds="true" preserveRatio="true" rotate="90.0" />
+      <Text fx:id="username1" layoutX="695.0" layoutY="885.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+      <Text fx:id="username2" layoutX="695.0" layoutY="15.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+      <Text fx:id="username3" layoutX="10.0" layoutY="235.0" strokeType="OUTSIDE" strokeWidth="0.0" />
       <Pane fx:id="schermataIniziale" prefHeight="900.0" prefWidth="900.0" stylesheets="@../font/font.css">
          <children>
             <Pane opacity="0.5" prefHeight="900.0" prefWidth="900.0" style="-fx-background-color: black;" stylesheets="@../font/font.css">

@@ -9,22 +9,22 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane fx:id="tavola" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="600.0" styleClass="tavolo" stylesheets="@../css/stili.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.Controller">
+<Pane fx:id="tavola" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="600.0" styleClass="tavolo" stylesheets="@../css/stili.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.Controller">
    <children>
-      <Rectangle arcHeight="60.0" arcWidth="60.0" fill="#a15c1359" height="300.0" layoutX="50.0" layoutY="220.0" smooth="false" stroke="#a15c1323" strokeType="INSIDE" width="500.0" />
-      <Ellipse fx:id="ellisse1" fill="#a15c134f" layoutX="300.0" layoutY="800.0" radiusX="230.0" radiusY="130.0" stroke="#a15c134f" strokeType="INSIDE" />
+      <Rectangle arcHeight="60.0" arcWidth="60.0" fill="#a15c1359" height="300.0" layoutX="50.0" layoutY="192.0" smooth="false" stroke="#a15c1323" strokeType="INSIDE" width="500.0" />
+      <Ellipse fx:id="ellisse1" fill="#a15c134f" layoutX="300.0" layoutY="700.0" radiusX="230.0" radiusY="130.0" stroke="#a15c134f" strokeType="INSIDE" />
       <Ellipse fx:id="ellisse2" fill="#a15c134f" layoutX="300.0" radiusX="230.0" radiusY="100.0" stroke="#a15c134f" strokeType="INSIDE" />
       <ImageView fx:id="carta1" fitHeight="180.0" fitWidth="115.0" layoutX="112.5" layoutY="620.0" onMouseClicked="#onClickCarta1" pickOnBounds="true" preserveRatio="true" />
       <ImageView fx:id="carta2" fitHeight="180.0" fitWidth="115.0" layoutX="242.5" layoutY="620.0" onMouseClicked="#onClickCarta2" pickOnBounds="true" preserveRatio="true" />
       <ImageView fx:id="carta3" fitHeight="180.0" fitWidth="115.0" layoutX="372.5" layoutY="620.0" onMouseClicked="#onClickCarta3" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="briscola" fitHeight="180.0" fitWidth="115.0" layoutX="340.0" layoutY="280.0" pickOnBounds="true" preserveRatio="true" rotate="-90.0" />
-      <ImageView fx:id="mazzo" fitHeight="180.0" fitWidth="115.0" layoutX="383.0" layoutY="280.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="briscola" fitHeight="180.0" fitWidth="115.0" layoutX="340.0" layoutY="252.0" pickOnBounds="true" preserveRatio="true" rotate="-90.0" />
+      <ImageView fx:id="mazzo" fitHeight="180.0" fitWidth="115.0" layoutX="383.0" layoutY="252.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../carte/schiena.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="cartaInTavola1" fitHeight="180.0" fitWidth="115.0" layoutX="140.0" layoutY="390.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="cartaInTavola2" fitHeight="180.0" fitWidth="115.0" layoutX="140.0" layoutY="180.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="cartaInTavola1" fitHeight="180.0" fitWidth="115.0" layoutX="140.0" layoutY="362.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="cartaInTavola2" fitHeight="180.0" fitWidth="115.0" layoutX="140.0" layoutY="152.0" pickOnBounds="true" preserveRatio="true" />
       <ImageView fx:id="schiena1" fitHeight="180.0" fitWidth="115.0" layoutX="372.5" layoutY="-60.0" pickOnBounds="true" preserveRatio="true" rotate="180.0">
          <rotationAxis>
             <Point3D y="1.0" />
@@ -37,19 +37,21 @@
          <rotationAxis>
             <Point3D y="1.0" />
          </rotationAxis></ImageView>
-      <Pane fx:id="schermataIniziale" prefHeight="800.0" prefWidth="600.0" stylesheets="@../font/font.css">
+      <Text fx:id="username1" layoutX="540.0" layoutY="790.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+      <Text fx:id="username2" layoutX="10.0" layoutY="20.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+      <Pane fx:id="schermataIniziale" prefHeight="700.0" prefWidth="600.0" stylesheets="@../font/font.css">
          <children>
-            <Pane opacity="0.5" prefHeight="800.0" prefWidth="600.0" style="-fx-background-color: black;" stylesheets="@../font/font.css" />
-            <Text fill="WHITE" fontSmoothingType="LCD" strokeType="OUTSIDE" strokeWidth="0.0" text="In attesa del 2° giocatore..." textAlignment="CENTER" x="50.0" y="380.0">
+            <Pane opacity="0.5" prefHeight="700.0" prefWidth="600.0" style="-fx-background-color: black;" stylesheets="@../font/font.css" />
+            <Text fill="WHITE" fontSmoothingType="LCD" layoutY="-30.0" strokeType="OUTSIDE" strokeWidth="0.0" text="In attesa del 2° giocatore..." textAlignment="CENTER" x="50.0" y="380.0">
                <font>
                   <Font name="Comic Sans MS Bold" size="35.0" />
                </font>
             </Text>
-            <Text fx:id="testoIpServer" fill="WHITE" layoutX="10.0" layoutY="500.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Indirizzo IP del server: " wrappingWidth="288.13671875" />
-            <Text fx:id="testoPorta" fill="WHITE" layoutX="10.0" layoutY="520.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Porta: " wrappingWidth="288.13671875" />
+            <Text fx:id="testoIpServer" fill="WHITE" layoutX="10.0" layoutY="470.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Indirizzo IP del server: " wrappingWidth="288.13671875" />
+            <Text fx:id="testoPorta" fill="WHITE" layoutX="10.0" layoutY="490.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Porta: " wrappingWidth="288.13671875" />
          </children>
       </Pane>
-      <Pane fx:id="schermataVittoria" mouseTransparent="true" opacity="0.0" prefHeight="800.0" prefWidth="600.0" stylesheets="@../css/stili.css">
+      <Pane fx:id="schermataVittoria" mouseTransparent="true" opacity="0.0" prefHeight="700.0" prefWidth="600.0" stylesheets="@../css/stili.css">
          <children>
             <Rectangle arcHeight="50.0" arcWidth="50.0" fill="#8a581f" height="600.0" layoutX="50.0" layoutY="100.0" opacity="0.8" stroke="BLACK" strokeType="INSIDE" styleClass="fine" width="500.0" />
             <ImageView fitHeight="496.0" fitWidth="541.0" layoutX="52.0" layoutY="116.0" pickOnBounds="true" preserveRatio="true">
@@ -69,7 +71,7 @@
             </Text>
          </children>
       </Pane>
-      <Pane fx:id="schermataSconfitta" mouseTransparent="true" opacity="0.0" prefHeight="800.0" prefWidth="600.0" stylesheets="@../css/stili.css">
+      <Pane fx:id="schermataSconfitta" mouseTransparent="true" opacity="0.0" prefHeight="700.0" prefWidth="600.0" stylesheets="@../css/stili.css">
          <children>
             <Rectangle arcHeight="50.0" arcWidth="50.0" fill="#8a581f" height="600.0" layoutX="50.0" layoutY="100.0" opacity="0.8" stroke="BLACK" strokeType="INSIDE" styleClass="fine" width="500.0" />
             <ImageView fitHeight="310.0" fitWidth="277.0" layoutX="162.0" layoutY="217.0" pickOnBounds="true" preserveRatio="true">
@@ -89,7 +91,7 @@
             </Text>
          </children>
       </Pane>
-      <Pane fx:id="schermataPareggio" layoutX="10.0" layoutY="10.0" mouseTransparent="true" opacity="0.0" prefHeight="800.0" prefWidth="600.0" stylesheets="@../css/stili.css">
+      <Pane fx:id="schermataPareggio" layoutX="10.0" layoutY="10.0" mouseTransparent="true" opacity="0.0" prefHeight="700.0" prefWidth="600.0" stylesheets="@../css/stili.css">
          <children>
             <Rectangle arcHeight="50.0" arcWidth="50.0" fill="#8a581f" height="600.0" layoutX="50.0" layoutY="100.0" opacity="0.8" stroke="BLACK" strokeType="INSIDE" styleClass="fine" width="500.0" />
             <ImageView fitHeight="357.0" fitWidth="410.0" layoutX="122.0" layoutY="193.0" pickOnBounds="true" preserveRatio="true">

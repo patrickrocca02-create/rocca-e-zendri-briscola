@@ -42,14 +42,16 @@ public class Server {
                 System.out.println("Giocatore " + i + " connesso");
                 System.out.println("server: " + partita.getNGiocatori());
                 clients.get(i).inviaNGiocatori(partita.getNGiocatori());
+                partita.getGiocatori().get(i).setNome(clients.get(i).ascoltaNome());
             } catch(Exception e) {}
         }
 
+        inviaNomi();
         broadcastDisposizione();
 
         boolean finito = false;
         while(!finito){
-            Carta c = clients.get(partita.getTurno()).ascolta();
+            Carta c = clients.get(partita.getTurno()).ascoltaCarta();
 
             partita.processaMossa(c);
 
@@ -72,6 +74,18 @@ public class Server {
         try{
             ss.close();
         }catch(Exception e){}
+    }
+
+    private void inviaNomi(){
+        int i = 0;
+        String[] nomi = new String[partita.getNGiocatori()];
+        for(Giocatore g : partita.getGiocatori()){
+            nomi[i++] = g.getNome();
+        }
+        i = 0;
+        for(Client c : clients){
+            c.inviaNomi(nomi,i++);
+        }
     }
 
     protected void broadcastDisposizione(){

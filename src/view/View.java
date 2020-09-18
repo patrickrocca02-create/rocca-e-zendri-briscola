@@ -1,5 +1,6 @@
 package view;
 
+import com.sun.security.jgss.GSSUtil;
 import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -30,6 +31,7 @@ public class View {
     private Pane schermataCarteCompagno;
 
     private ArrayList<ImageView> carteCompagno;
+    private Text testoCarteCompagno;
 
     private Text puntiVittoria;
     private Text puntiSconfitta;
@@ -38,12 +40,14 @@ public class View {
     private Text testoIpServer;
     private Text testoPorta;
 
+    private Text[] usernames;
+
     private Animator animator;
 
     private boolean primaDisposizione;
 
 
-    public View(Pane tavola, ImageView[] carteInTavola, ImageView briscola, ImageView[] carteInMano, ImageView[][] schiene, ImageView mazzo, Ellipse[] ellissiGiocatori, Pane[] schermate, Text[] testi, ImageView[] carteCompagno){
+    public View(Pane tavola, ImageView[] carteInTavola, ImageView briscola, ImageView[] carteInMano, ImageView[][] schiene, ImageView mazzo, Text[] usernames, Ellipse[] ellissiGiocatori, Pane[] schermate, Text[] testi, ImageView[] carteCompagno){
         this.tavola = tavola;
 
         this.carteInMano = new ArrayList<>();
@@ -79,14 +83,14 @@ public class View {
         this.puntiPareggio = testi[2];
         this.testoIpServer = testi[3];
         this.testoPorta = testi[4];
+        this.testoCarteCompagno = testi[5];
 
         this.briscola = new CartaGrafica(briscola);
-
         this.mazzo = new CartaGrafica(mazzo);
+        this.usernames = usernames;
+        this.ellissiGiocatori = ellissiGiocatori;
 
         this.animator = new Animator(this.tavola, this.carteInTavola.size());
-
-        this.ellissiGiocatori = ellissiGiocatori;
 
         this.primaDisposizione = true;
     }
@@ -128,7 +132,6 @@ public class View {
                         Platform.runLater(new Runnable() {
                             @Override
                             public void run() {
-                                System.out.println("metti in tavola tu");
                                 animator.mettiInTavola(cartaInMano, cartaInTavola);
                             }
                         });
@@ -150,7 +153,6 @@ public class View {
                             Platform.runLater(new Runnable() {
                                 @Override
                                 public void run() {
-                                    System.out.println("metti in tavola altri giocatori");
                                     animator.mettiInTavolaAltriGiocatori(schiena, cartaInTavola, imgNuovaCarta, posGiocatore);
                                 }
                             });
@@ -211,7 +213,6 @@ public class View {
                                     Image imgNuovaCarta = nuovaCarta.getImage();
                                     final int idPesca = i;
                                     try {
-                                        System.out.println("pesca");
                                         Platform.runLater(new Runnable() {
                                             @Override
                                             public void run() {
@@ -244,7 +245,6 @@ public class View {
                                         ImageView cartaInMano = this.schiene[IDs[i] - 1][j].getImageView();
                                         final int posGiocatore = animator.getPosGiocatori(IDs[i]);
                                         final int idPesca = i;
-                                        System.out.println("pescaAltriGiocatori");
                                         Platform.runLater(new Runnable() {
                                             @Override
                                             public void run() {
@@ -342,7 +342,6 @@ public class View {
         for (int i = 0; i < 3; i++) {
             final int idI = i;
             try{Thread.sleep(animator.DELAY_PESCA+3/4);} catch(Exception e) {}
-            System.out.println("pescaCarta");
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
@@ -355,7 +354,6 @@ public class View {
             for (int j = 0; j < schiene.length; j++) {
                 final int idJ = j;
                 try{Thread.sleep(animator.DELAY_PESCA*3/4);} catch(Exception e) {}
-                System.out.println("pescaAltriGiocatori");
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
@@ -366,7 +364,6 @@ public class View {
                 this.schiene[j][i].setSchiena(true);
             }
         }
-        System.out.println("scopriBriscola");
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
@@ -390,8 +387,9 @@ public class View {
             imgsCarte[i] = carteCompagno[i].getImage();
         }
 
+        testoCarteCompagno.setText("Carte di " + usernames[2].getText() + ":");
+
         ImageView[] ivs = this.carteCompagno.toArray(new ImageView[3]);
-        System.out.println("mostraCarteCompagno");
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
@@ -402,13 +400,20 @@ public class View {
     }
 
     public void nascondiCarteCompagno(){
-        System.out.println("nascondiCarteCompagno");
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
                 animator.nascondiSchermataCarteCompagno(schermataCarteCompagno);
             }
         });
+    }
+
+    public void setNomi(String[] nomi, int indice){
+        for (int i = 0; i < nomi.length; i++) {
+            if(indice == nomi.length)
+                indice = 0;
+            this.usernames[i].setText(nomi[indice++]);
+        }
     }
 
     public CartaGrafica getCarta(int indice) {

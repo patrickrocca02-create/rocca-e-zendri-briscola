@@ -38,10 +38,24 @@ public class Client {
             out.flush();
         }catch (Exception e){e.printStackTrace();}
     }
-    public Carta ascolta(){
+    public void inviaNomi(String[] nomi, int indice){
+        try {
+            out.writeObject(nomi);
+            out.writeObject(indice);
+            out.flush();
+        }catch (Exception e){}
+    }
+    public Carta ascoltaCarta(){
         try {
             return (Carta) in.readObject();
         } catch (Exception e) { e.printStackTrace(); }
+        return null;
+    }
+
+    public String ascoltaNome(){
+        try {
+            return (String) in.readObject();
+        }catch (Exception e){ e.printStackTrace(); }
         return null;
     }
 

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 public class Giocatore {
     private ArrayList<Carta> carteInMano;
     private int punti;
+    private String nome;
 
     public Giocatore(){
         this.carteInMano = new ArrayList<Carta>();
@@ -39,6 +40,13 @@ public class Giocatore {
     }
     public int getPunti() {
         return punti;
+    }
+
+    public void setNome(String nome){
+        this.nome = nome;
+    }
+    public String getNome(){
+        return this.nome;
     }
 
     public ArrayList<Carta> getCarteInMano() {
