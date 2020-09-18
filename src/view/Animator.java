@@ -172,7 +172,6 @@ public class Animator {
                 carta.setVisible(true);
                 destinazione.setVisible(true);
                 tavola.getChildren().remove(copia);
-                System.out.println("FINE ANIMAZIONE GIOCA CARTA");
             }
         });
 
@@ -355,10 +354,10 @@ public class Animator {
             strokeTransition.setFromValue((Color) e[i].getStroke());
             final Color toColor;
             if (i == idTurno) {
-                System.out.println("LIGHTGREEN");
+                //System.out.println("LIGHTGREEN");
                 toColor = Color.LIGHTGREEN;
             }else{
-                System.out.println("MARRONE");
+                //System.out.println("MARRONE");
                 toColor = Color.rgb(161, 92, 19);
             }
             cambiaColore.getChildren().add(strokeTransition);
@@ -366,7 +365,6 @@ public class Animator {
             cambiaColore.setOnFinished(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent actionEvent) {
-                    System.out.println(toColor);
                     ellipse.setStroke(toColor);
                 }
             });
@@ -412,7 +410,6 @@ public class Animator {
     }
 
     public void nascondiSchermataCarteCompagno(Pane schermataCarte){
-        System.out.println("Mouse transparency: " + schermataCarte.isMouseTransparent());
         FadeTransition fadeTransition = new FadeTransition(Duration.millis(TEMPO_FADE_OUT_CARTE_COMPAGNO), schermataCarte);
         fadeTransition.setFromValue(1);
         fadeTransition.setToValue(0);

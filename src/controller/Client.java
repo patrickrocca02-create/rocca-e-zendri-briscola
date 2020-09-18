@@ -1,5 +1,6 @@
 package controller;
 
+import classifica.Classifica;
 import model.Carta;
 import model.Disposizione;
 import view.View;
@@ -94,6 +95,8 @@ public class Client extends Thread{
             }else{
                 //fine partita
                 finePartita((int[]) inObj);
+                if(((int[])inObj)[0] == 0)
+                    Classifica.addGiocatore(nome);
                 fine = true;
             }
         }

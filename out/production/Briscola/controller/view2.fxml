@@ -37,9 +37,9 @@
          <rotationAxis>
             <Point3D y="1.0" />
          </rotationAxis></ImageView>
-      <Text fx:id="username1" layoutX="540.0" layoutY="790.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+      <Text fx:id="username1" layoutX="540.0" layoutY="690.0" strokeType="OUTSIDE" strokeWidth="0.0" />
       <Text fx:id="username2" layoutX="10.0" layoutY="20.0" strokeType="OUTSIDE" strokeWidth="0.0" />
-      <Pane fx:id="schermataIniziale" prefHeight="700.0" prefWidth="600.0" stylesheets="@../font/font.css">
+      <Pane fx:id="schermataIniziale" prefHeight="700.0" prefWidth="600.0">
          <children>
             <Pane opacity="0.5" prefHeight="700.0" prefWidth="600.0" style="-fx-background-color: black;" stylesheets="@../font/font.css" />
             <Text fill="WHITE" fontSmoothingType="LCD" layoutY="-30.0" strokeType="OUTSIDE" strokeWidth="0.0" text="In attesa del 2° giocatore..." textAlignment="CENTER" x="50.0" y="380.0">

@@ -1,3 +1,6 @@
 .tavolo{
     -fx-background-image: url("./images/wood.jpg");
 }
+.scroll-pane .viewport {
+       -fx-background-color: transparent;
+}

@@ -1,5 +1,6 @@
 package view;
 
+import classifica.Classifica;
 import com.sun.security.jgss.GSSUtil;
 import javafx.application.Platform;
 import javafx.scene.image.Image;
@@ -285,8 +286,11 @@ public class View {
             this.primaDisposizione = false;
         }
 
-        if(d.getTurno() != -1)
+        if(d.getTurno() != -1) {
+            System.out.println("Aggiornamento colori");
+            System.out.println(indexOfTurno + System.lineSeparator());
             animator.cambiaTurno(indexOfTurno, ellissiGiocatori);
+        }
 
         try{
             Thread.sleep(50);

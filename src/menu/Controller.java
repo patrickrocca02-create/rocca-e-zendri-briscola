@@ -1,18 +1,24 @@
 package menu;
 
+import classifica.Classifica;
 import controller.ApplicationMain;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 
 import javafx.scene.text.Text;
+import classifica.Giocatore;
+import javafx.scene.text.TextAlignment;
 import model.Server;
 
 import java.net.InetAddress;
+import java.util.ArrayList;
 
 public class Controller {
 
@@ -33,6 +39,12 @@ public class Controller {
 
     @FXML private Text testoConnessione;
 
+    @FXML private ScrollPane scrollPaneClassifica;
+    @FXML private Pane menuClassifica;
+    @FXML private AnchorPane paneClassifica;
+    @FXML private Text labelClassificaGiocatore;
+    @FXML private Text labelClassificaVittorie;
+
     private ToggleButton[] btnsNGiocatori;
     private int nGiocatori;
 
@@ -44,6 +56,7 @@ public class Controller {
 
     @FXML
     void initialize(){
+        Classifica.load();
         btnsNGiocatori = new ToggleButton[]{btn2Giocatori, btn3Giocatori, btn4Giocatori};
     }
 
@@ -106,12 +119,14 @@ public class Controller {
 
     @FXML
     void onClickJoinPartita(MouseEvent event) {
+        menuClassifica.setVisible(false);
         menuCreaPartita.setVisible(false);
         menuJoinPartita.setVisible(true);
     }
 
     @FXML
     void onClickNuovaPartita(MouseEvent event) {
+        menuClassifica.setVisible(false);
         menuJoinPartita.setVisible(false);
         menuCreaPartita.setVisible(true);
     }
@@ -224,6 +239,50 @@ public class Controller {
             return true;
         } catch (NumberFormatException nfe) {
             return false;
+        }
+    }
+
+    @FXML
+    void onClickClassifica(MouseEvent event) {
+        menuCreaPartita.setVisible(false);
+        menuJoinPartita.setVisible(false);
+        menuClassifica.setVisible(true);
+
+        aggiornaClassifica();
+    }
+
+    @FXML
+    void onClickResetClassifica(MouseEvent event){
+        Classifica.reset();
+        aggiornaClassifica();
+    }
+    @FXML
+    void onClickAggiornaClassifica(MouseEvent event){
+        aggiornaClassifica();
+    }
+
+    private void aggiornaClassifica(){
+        ArrayList<Giocatore> giocatori = Classifica.getAttuale().getGiocatori();
+        paneClassifica.getChildren().clear();
+        paneClassifica.setPrefHeight(0);
+        for (int i = 0; i < giocatori.size(); i++) {
+            Text testoGiocatore = new Text();
+            Text testoVittorie = new Text();
+            Text testoPos = new Text();
+
+            paneClassifica.getChildren().addAll(testoGiocatore, testoVittorie, testoPos);
+            testoGiocatore.setLayoutX(labelClassificaGiocatore.getLayoutX() - scrollPaneClassifica.getLayoutX());
+            testoGiocatore.setLayoutY(i*15 + 15);
+            testoVittorie.setLayoutX(labelClassificaVittorie.getLayoutX() - scrollPaneClassifica.getLayoutX());
+            testoVittorie.setLayoutY(i*15 + 15);
+            testoPos.setLayoutX(testoGiocatore.getLayoutX()-23);
+            testoPos.setLayoutY(i*15 + 15);
+
+            paneClassifica.setPrefHeight(i*15 + 15);
+
+            testoPos.setText((i+1) + ".");
+            testoGiocatore.setText(giocatori.get(i).getNome());
+            testoVittorie.setText(String.valueOf(giocatori.get(i).getnVittorie()));
         }
     }
 }
